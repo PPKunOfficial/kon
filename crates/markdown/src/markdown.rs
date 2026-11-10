@@ -6439,11 +6439,11 @@ mod tests {
         for alignment in ["---", ":---", ":---:", "---:"] {
             for (cell, surrounding_words) in [
                 (
-                    "[https://zed.dev/docs/über/条件/🙂/markdown/preview/tables/wrapped-links](https://zed.dev/docs/markdown/unicode)",
+                    "[https://kon.dev/docs/über/条件/🙂/markdown/preview/tables/wrapped-links](https://kon.dev/docs/markdown/unicode)",
                     None,
                 ),
                 (
-                    "before [https://zed.dev/docs/markdown/preview/tables/wrapped-link-hit-testing-and-selection](https://zed.dev/docs/markdown/links) after",
+                    "before [https://kon.dev/docs/markdown/preview/tables/wrapped-link-hit-testing-and-selection](https://kon.dev/docs/markdown/links) after",
                     Some(["before", "after"]),
                 ),
             ] {
@@ -6837,7 +6837,7 @@ mod tests {
                 TextAlign::Right,
             ),
             (
-                r#"<p style="text-align: center"><a href="https://zed.dev"><img src="icon.png"></a></p>"#,
+                r#"<p style="text-align: center"><a href="https://kon.dev"><img src="icon.png"></a></p>"#,
                 TextAlign::Center,
             ),
         ] {
@@ -6900,7 +6900,7 @@ mod tests {
             "<!-- comment -->\n\n# ![](icon.png)",
             "<!--\nmulti-line\ncomment\n-->\n\n# ![](icon.png)",
             "<!-- one -->\n<!-- two -->\n\n# ![](icon.png)",
-            "[zed]: https://zed.dev\n\n# ![](icon.png)",
+            "[zed]: https://kon.dev\n\n# ![](icon.png)",
         ] {
             assert_eq!(
                 heading_top(source),
@@ -8232,7 +8232,7 @@ mod tests {
         cx: &mut TestAppContext,
     ) {
         ensure_theme_initialized(cx);
-        let source = "~~[struck](https://zed.dev) through~~";
+        let source = "~~[struck](https://kon.dev) through~~";
         let highlight_start = source
             .find("struck")
             .expect("highlighted text should be present");
@@ -8303,7 +8303,7 @@ mod tests {
         // Only the link background distinguishes `f` from its neighbors, so the
         // run boundaries around it must survive shaping to keep `f` and `i` from
         // forming a ligature across them
-        let source = "a[f](https://zed.dev)i b";
+        let source = "a[f](https://kon.dev)i b";
         let markdown = cx.new(|cx| Markdown::new(source.into(), None, None, cx));
         let (_, cx) = cx.add_window_view(move |_, _| MarkdownTestView {
             markdown,
@@ -8437,8 +8437,8 @@ mod tests {
     const WRAPPED_LINK_TABLE: &str = indoc::indoc! {r#"
         | # | Link |
         | --- | --- |
-        | 1 | [https://zed.dev/docs/markdown/preview/tables/wrapped-link-hit-testing-and-selection](https://zed.dev/docs/markdown/preview/tables/wrapped-link-hit-testing-and-selection) |
-        | 2 | [https://zed.dev/docs/editor/appearance/themes/configuring-editor-colors](https://zed.dev/docs/editor/appearance/themes/configuring-editor-colors) |
+        | 1 | [https://kon.dev/docs/markdown/preview/tables/wrapped-link-hit-testing-and-selection](https://kon.dev/docs/markdown/preview/tables/wrapped-link-hit-testing-and-selection) |
+        | 2 | [https://kon.dev/docs/editor/appearance/themes/configuring-editor-colors](https://kon.dev/docs/editor/appearance/themes/configuring-editor-colors) |
     "#};
 
     fn wrapped_link_table_with_columns(
@@ -8458,11 +8458,11 @@ mod tests {
         for (number, url) in [
             (
                 "1",
-                "https://zed.dev/docs/markdown/preview/tables/wrapped-link-hit-testing-and-selection",
+                "https://kon.dev/docs/markdown/preview/tables/wrapped-link-hit-testing-and-selection",
             ),
             (
                 "2",
-                "https://zed.dev/docs/editor/appearance/themes/configuring-editor-colors",
+                "https://kon.dev/docs/editor/appearance/themes/configuring-editor-colors",
             ),
         ] {
             let mut cells = vec![number.to_string(); column_count];

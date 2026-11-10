@@ -239,7 +239,7 @@ fn render_theme_section(tab_index: &mut isize, cx: &mut App) -> impl IntoElement
 
 fn render_base_keymap_section(tab_index: &mut isize, cx: &mut App) -> impl IntoElement {
     let base_keymap = match BaseKeymap::get_global(cx) {
-        BaseKeymap::Zed => Some(0),
+        BaseKeymap::Kon => Some(0),
         BaseKeymap::VSCode => Some(1),
         BaseKeymap::JetBrains => Some(2),
         BaseKeymap::SublimeText => Some(3),
@@ -254,8 +254,8 @@ fn render_base_keymap_section(tab_index: &mut isize, cx: &mut App) -> impl IntoE
         ToggleButtonGroup::two_rows(
             "base_keymap_selection",
             [
-                ToggleButtonWithIcon::new("Zed", IconName::AiZed, |_, _, cx| {
-                    write_keymap_base(BaseKeymap::Zed, cx);
+                ToggleButtonWithIcon::new("Kon", IconName::AiZed, |_, _, cx| {
+                    write_keymap_base(BaseKeymap::Kon, cx);
                 }),
                 ToggleButtonWithIcon::new("VS Code", IconName::EditorVsCode, |_, _, cx| {
                     write_keymap_base(BaseKeymap::VSCode, cx);

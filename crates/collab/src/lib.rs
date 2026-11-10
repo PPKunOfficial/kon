@@ -149,7 +149,7 @@ impl Config {
         match self.zed_environment.as_ref() {
             "development" => "http://localhost:3000",
             "staging" => "https://staging.zed.dev",
-            _ => "https://zed.dev",
+            _ => "https://kon.dev",
         }
     }
 

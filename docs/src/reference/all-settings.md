@@ -554,7 +554,7 @@ Note that a save will be triggered when an unsaved tab is closed, even if this i
 
 ```json [settings]
 {
-  "base_keymap": "Zed"
+  "base_keymap": "Kon"
 }
 ```
 
@@ -4379,7 +4379,7 @@ If you wish to exclude certain hosts from using the proxy, set the `NO_PROXY` en
 
 - Description: URL of the Zed service.
 - Setting: `server_url`
-- Default: `"https://zed.dev"`
+- Default: `"https://kon.dev"`
 
 The `ZED_SERVER_URL` environment variable takes precedence over this setting.
 

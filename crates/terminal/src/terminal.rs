@@ -5302,7 +5302,7 @@ mod tests {
 
         #[gpui::test]
         async fn test_ctrl_click_same_position(cx: &mut TestAppContext) {
-            let terminal = init_terminal_test(cx, b"Visit https://zed.dev/ for more\r\n");
+            let terminal = init_terminal_test(cx, b"Visit https://kon.dev/ for more\r\n");
 
             terminal.update(cx, |terminal, cx| {
                 let click_position = point(px(80.0), px(10.0));
@@ -5318,7 +5318,7 @@ mod tests {
 
         #[gpui::test]
         async fn test_hyperlink_ctrl_click_same_position_in_mouse_mode(cx: &mut TestAppContext) {
-            let terminal = init_terminal_test(cx, b"Visit https://zed.dev/ for more\r\n");
+            let terminal = init_terminal_test(cx, b"Visit https://kon.dev/ for more\r\n");
 
             terminal.update(cx, |terminal, cx| {
             terminal.last_content.mode = Modes::MOUSE_MODE;
@@ -5340,7 +5340,7 @@ mod tests {
 
         #[gpui::test]
         async fn test_local_selection_activates_hyperlink_in_mouse_mode(cx: &mut TestAppContext) {
-            let terminal = init_terminal_test(cx, b"Visit https://zed.dev/ for more\r\n");
+            let terminal = init_terminal_test(cx, b"Visit https://kon.dev/ for more\r\n");
 
             terminal.update(cx, |terminal, cx| {
                 terminal.last_content.mode = Modes::MOUSE_MODE;
@@ -5376,7 +5376,7 @@ mod tests {
         ) {
             let terminal = init_terminal_test(
                 cx,
-                b"Visit https://zed.dev/ for more\r\nThis is another line\r\n",
+                b"Visit https://kon.dev/ for more\r\nThis is another line\r\n",
             );
 
             terminal.update(cx, |terminal, cx| {
@@ -5412,7 +5412,7 @@ mod tests {
 
         #[gpui::test]
         async fn test_plain_click_on_hyperlink_in_mouse_mode_is_reported(cx: &mut TestAppContext) {
-            let terminal = init_terminal_test(cx, b"Visit https://zed.dev/ for more\r\n");
+            let terminal = init_terminal_test(cx, b"Visit https://kon.dev/ for more\r\n");
 
             terminal.update(cx, |terminal, cx| {
                 terminal.last_content.mode = Modes::MOUSE_MODE;
@@ -5439,7 +5439,7 @@ mod tests {
         async fn test_ctrl_click_on_non_hyperlink_in_mouse_mode_is_reported(
             cx: &mut TestAppContext,
         ) {
-            let terminal = init_terminal_test(cx, b"Visit https://zed.dev/ for more\r\n");
+            let terminal = init_terminal_test(cx, b"Visit https://kon.dev/ for more\r\n");
 
             terminal.update(cx, |terminal, cx| {
                 terminal.last_content.mode = Modes::MOUSE_MODE;
@@ -5467,7 +5467,7 @@ mod tests {
         async fn test_ctrl_click_in_mouse_mode_forwards_when_setting_disabled(
             cx: &mut TestAppContext,
         ) {
-            let terminal = init_terminal_test(cx, b"Visit https://zed.dev/ for more\r\n");
+            let terminal = init_terminal_test(cx, b"Visit https://kon.dev/ for more\r\n");
 
             cx.update_global(|store: &mut settings::SettingsStore, cx| {
                 store.update_user_settings(cx, |settings| {
@@ -5502,7 +5502,7 @@ mod tests {
         async fn test_hyperlink_ctrl_click_drag_outside_bounds(cx: &mut TestAppContext) {
             let terminal = init_terminal_test(
                 cx,
-                b"Visit https://zed.dev/ for more\r\nThis is another line\r\n",
+                b"Visit https://kon.dev/ for more\r\nThis is another line\r\n",
             );
 
             terminal.update(cx, |terminal, cx| {
@@ -5522,7 +5522,7 @@ mod tests {
 
         #[gpui::test]
         async fn test_ctrl_click_drag_within_bounds(cx: &mut TestAppContext) {
-            let terminal = init_terminal_test(cx, b"Visit https://zed.dev/ for more\r\n");
+            let terminal = init_terminal_test(cx, b"Visit https://kon.dev/ for more\r\n");
 
             terminal.update(cx, |terminal, cx| {
                 let down_position = point(px(70.0), px(10.0));
@@ -5856,9 +5856,9 @@ mod tests {
             (test_entities, expected_hovered_word, cx)
         }
 
-        const OUTPUT_ZED_DEV: &str = "Visit https://zed.dev/ for more";
+        const OUTPUT_ZED_DEV: &str = "Visit https://kon.dev/ for more";
         const OUTPUT_NONE: &str = "None";
-        const ZED_DEV_STR: &str = "https://zed.dev/";
+        const ZED_DEV_STR: &str = "https://kon.dev/";
         const ZED_DEV_PT: GpuiPoint<Pixels> = point(px(30.0), px(2.5));
 
         #[gpui::test]

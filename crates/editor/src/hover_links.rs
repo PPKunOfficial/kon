@@ -1353,7 +1353,7 @@ mod tests {
         init_test(cx, |_| {});
 
         let mut cx = EditorLspTestContext::new_rust(Default::default(), cx).await;
-        cx.set_state("https://zed.dev/ˇreleases");
+        cx.set_state("https://kon.dev/ˇreleases");
         let old_snapshot = cx.update_editor(|editor, window, cx| editor.snapshot(window, cx));
         let link_start = MultiBufferOffset(17).to_display_point(&old_snapshot.display_snapshot);
         let link_end = MultiBufferOffset(22).to_display_point(&old_snapshot.display_snapshot);
@@ -3331,11 +3331,11 @@ mod tests {
         .await;
 
         cx.set_state(indoc! {"
-            Let's test a [complex](https://zed.dev/channel/had-(oops)) caseˇ.
+            Let's test a [complex](https://kon.dev/channel/had-(oops)) caseˇ.
         "});
 
         let screen_coord = cx.pixel_position(indoc! {"
-            Let's test a [complex](https://zed.dev/channel/had-(ˇoops)) case.
+            Let's test a [complex](https://kon.dev/channel/had-(ˇoops)) case.
             "});
 
         let modifiers = cx.read(Modifiers::secondary_key);
@@ -3343,14 +3343,14 @@ mod tests {
         cx.assert_editor_text_highlights(
             HighlightKey::HoveredLinkState,
             indoc! {"
-            Let's test a [complex](«https://zed.dev/channel/had-(oops)ˇ») case.
+            Let's test a [complex](«https://kon.dev/channel/had-(oops)ˇ») case.
         "},
         );
 
         cx.simulate_click(screen_coord, modifiers);
         assert_eq!(
             cx.opened_url(),
-            Some("https://zed.dev/channel/had-(oops)".into())
+            Some("https://kon.dev/channel/had-(oops)".into())
         );
     }
 
@@ -3504,7 +3504,7 @@ mod tests {
         }
         assert_eq!(
             opened,
-            ["https://zed.dev/", path!("/root/dir/file2.rs")].map(|target| Some(target.to_owned()))
+            ["https://kon.dev/", path!("/root/dir/file2.rs")].map(|target| Some(target.to_owned()))
         );
     }
 
@@ -3537,27 +3537,27 @@ mod tests {
 
         // No link
         cx.set_state(indoc! {"
-            Let's test a [complex](https://zed.dev/channel/) caseˇ.
+            Let's test a [complex](https://kon.dev/channel/) caseˇ.
         "});
         assert_no_highlight!(cx);
 
         // No modifier
         let screen_coord = cx.pixel_position(indoc! {"
-            Let's test a [complex](https://zed.dev/channel/ˇ) case.
+            Let's test a [complex](https://kon.dev/channel/ˇ) case.
             "});
         cx.simulate_mouse_move(screen_coord, None, Modifiers::none());
         assert_no_highlight!(cx);
 
         // Modifier active
         let screen_coord = cx.pixel_position(indoc! {"
-            Let's test a [complex](https://zed.dev/channeˇl/) case.
+            Let's test a [complex](https://kon.dev/channeˇl/) case.
             "});
         let modifiers = cx.read(Modifiers::secondary_key);
         cx.simulate_mouse_move(screen_coord, None, modifiers);
         cx.assert_editor_text_highlights(
             HighlightKey::HoveredLinkState,
             indoc! {"
-            Let's test a [complex](«https://zed.dev/channel/ˇ») case.
+            Let's test a [complex](«https://kon.dev/channel/ˇ») case.
         "},
         );
     }
@@ -3573,20 +3573,20 @@ mod tests {
         )
         .await;
 
-        cx.set_state(indoc! {"https://zed.dev/releases is a cool ˇwebpage."});
+        cx.set_state(indoc! {"https://kon.dev/releases is a cool ˇwebpage."});
 
         let screen_coord =
-            cx.pixel_position(indoc! {"https://zed.dev/relˇeases is a cool webpage."});
+            cx.pixel_position(indoc! {"https://kon.dev/relˇeases is a cool webpage."});
 
         let modifiers = cx.read(Modifiers::secondary_key);
         cx.simulate_mouse_move(screen_coord, None, modifiers);
         cx.assert_editor_text_highlights(
             HighlightKey::HoveredLinkState,
-            indoc! {"«https://zed.dev/releasesˇ» is a cool webpage."},
+            indoc! {"«https://kon.dev/releasesˇ» is a cool webpage."},
         );
 
         cx.simulate_click(screen_coord, modifiers);
-        assert_eq!(cx.opened_url(), Some("https://zed.dev/releases".into()));
+        assert_eq!(cx.opened_url(), Some("https://kon.dev/releases".into()));
     }
 
     #[gpui::test]
@@ -3600,20 +3600,20 @@ mod tests {
         )
         .await;
 
-        cx.set_state(indoc! {"A cool ˇwebpage is https://zed.dev/releases"});
+        cx.set_state(indoc! {"A cool ˇwebpage is https://kon.dev/releases"});
 
         let screen_coord =
-            cx.pixel_position(indoc! {"A cool webpage is https://zed.dev/releˇases"});
+            cx.pixel_position(indoc! {"A cool webpage is https://kon.dev/releˇases"});
 
         let modifiers = cx.read(Modifiers::secondary_key);
         cx.simulate_mouse_move(screen_coord, None, modifiers);
         cx.assert_editor_text_highlights(
             HighlightKey::HoveredLinkState,
-            indoc! {"A cool webpage is «https://zed.dev/releasesˇ»"},
+            indoc! {"A cool webpage is «https://kon.dev/releasesˇ»"},
         );
 
         cx.simulate_click(screen_coord, modifiers);
-        assert_eq!(cx.opened_url(), Some("https://zed.dev/releases".into()));
+        assert_eq!(cx.opened_url(), Some("https://kon.dev/releases".into()));
     }
 
     #[test]

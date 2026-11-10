@@ -43825,7 +43825,7 @@ async fn test_paste_url_from_other_app_creates_markdown_link_over_selected_text(
 ) {
     init_test(cx, |_| {});
 
-    let url = "https://zed.dev";
+    let url = "https://kon.dev";
 
     let markdown_language = Arc::new(Language::new(
         LanguageConfig {
@@ -43983,7 +43983,7 @@ async fn test_paste_url_from_zed_copy_creates_markdown_link_over_selected_text(
 ) {
     init_test(cx, |_| {});
 
-    let url = "https://zed.dev";
+    let url = "https://kon.dev";
 
     let markdown_language = Arc::new(Language::new(
         LanguageConfig {
@@ -44022,7 +44022,7 @@ async fn test_paste_url_from_other_app_replaces_existing_url_without_creating_ma
 ) {
     init_test(cx, |_| {});
 
-    let url = "https://zed.dev";
+    let url = "https://kon.dev";
 
     let markdown_language = Arc::new(Language::new(
         LanguageConfig {
@@ -44108,7 +44108,7 @@ async fn test_paste_url_from_other_app_without_creating_markdown_link_in_non_mar
 ) {
     init_test(cx, |_| {});
 
-    let url = "https://zed.dev";
+    let url = "https://kon.dev";
 
     let markdown_language = Arc::new(Language::new(
         LanguageConfig {
@@ -44138,7 +44138,7 @@ async fn test_paste_url_from_other_app_creates_markdown_link_selectively_in_mult
 ) {
     init_test(cx, |_| {});
 
-    let url = "https://zed.dev";
+    let url = "https://kon.dev";
 
     let markdown_language = Arc::new(Language::new(
         LanguageConfig {
@@ -50750,7 +50750,7 @@ async fn test_lsp_show_document_external(cx: &mut TestAppContext) {
         .server
         .request::<lsp::request::ShowDocument>(
             lsp::ShowDocumentParams {
-                uri: "https://zed.dev/docs".parse::<lsp::Uri>().unwrap(),
+                uri: "https://kon.dev/docs".parse::<lsp::Uri>().unwrap(),
                 external: Some(true),
                 take_focus: None,
                 selection: None,
@@ -50761,7 +50761,7 @@ async fn test_lsp_show_document_external(cx: &mut TestAppContext) {
         .into_response()
         .expect("show document request should not error");
     assert_eq!(response, lsp::ShowDocumentResult { success: true });
-    assert_eq!(cx.opened_url(), Some("https://zed.dev/docs".to_string()));
+    assert_eq!(cx.opened_url(), Some("https://kon.dev/docs".to_string()));
     cx.run_until_parked();
     cx.update_workspace(|workspace, _, cx| {
         assert_eq!(
