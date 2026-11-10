@@ -546,11 +546,11 @@ Note that a save will be triggered when an unsaved tab is closed, even if this i
 
 - Description: Base key bindings scheme. Base keymaps can be overridden with user keymaps.
 - Setting: `base_keymap`
-- Default: `Zed`
+- Default: `Kon`
 
 **Options**
 
-1. Zed
+1. Kon
 
 ```json [settings]
 {

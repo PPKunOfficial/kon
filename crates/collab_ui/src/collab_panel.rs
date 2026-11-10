@@ -2739,23 +2739,9 @@ impl CollabPanel {
             .items_center()
             .child(Label::new(collab_blurb).color(Color::Muted))
             .child(
-                Button::new(button_id, button_label)
-                    .label_size(LabelSize::Small)
-                    .start_icon(Icon::new(button_icon).color(Color::Muted))
-                    .style(ButtonStyle::Outlined)
-                    .disabled(is_busy)
-                    .on_click(cx.listener(|this, _, window, cx| {
-                        let client = this.client.clone();
-                        let workspace = this.workspace.clone();
-                        cx.spawn_in(window, async move |_, mut cx| {
-                            client
-                                .connect(true, &mut cx)
-                                .await
-                                .into_response()
-                                .notify_workspace_async_err(workspace, &mut cx);
-                        })
-                        .detach()
-                    })),
+                Label::new("Sign-in is disabled in Kon.")
+                    .size(LabelSize::Small)
+                    .color(Color::Muted),
             )
     }
 

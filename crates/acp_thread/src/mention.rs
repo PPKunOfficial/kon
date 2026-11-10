@@ -147,7 +147,7 @@ impl MentionUri {
                     })
                 }
             }
-            "zed" => {
+            "kon" => {
                 if let Some(thread_id) = path.strip_prefix("/agent/thread/") {
                     let name = single_query_param(&url, "name")?.context("Missing thread name")?;
                     Ok(Self::Thread {

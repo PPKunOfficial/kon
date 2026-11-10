@@ -882,6 +882,9 @@ impl Client {
         try_provider: bool,
         cx: &AsyncApp,
     ) -> Result<Credentials> {
+        if !cfg!(any(test, feature = "test-support")) {
+            anyhow::bail!("Sign-in is disabled in Kon");
+        }
         let is_reauthenticating = if self.status().borrow().is_signed_out() {
             self.set_status(Status::Authenticating, cx);
             false

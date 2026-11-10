@@ -46,10 +46,10 @@ fn address() -> SocketAddr {
 
 fn instance_handshake() -> &'static str {
     match *release_channel::RELEASE_CHANNEL {
-        ReleaseChannel::Dev => "Zed Editor Dev Instance Running",
-        ReleaseChannel::Nightly => "Zed Editor Nightly Instance Running",
-        ReleaseChannel::Preview => "Zed Editor Preview Instance Running",
-        ReleaseChannel::Stable => "Zed Editor Stable Instance Running",
+        ReleaseChannel::Dev => "Kon Editor Dev Instance Running",
+        ReleaseChannel::Nightly => "Kon Editor Nightly Instance Running",
+        ReleaseChannel::Preview => "Kon Editor Preview Instance Running",
+        ReleaseChannel::Stable => "Kon Editor Stable Instance Running",
     }
 }
 
