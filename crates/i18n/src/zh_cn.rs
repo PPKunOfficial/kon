@@ -301,7 +301,6 @@ pub fn lookup(text: &str) -> Option<&'static str> {
         "Please update Kon to Collaborate" => "请更新 Kon 以使用协作",
         "Restart to update Kon" => "重启以更新 Kon",
 
-        "Configure" => "配置",
         "None" => "无",
         "On" => "开",
         "Off" => "关",
