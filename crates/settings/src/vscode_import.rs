@@ -231,6 +231,7 @@ impl VsCodeSettings {
             remote: RemoteSettingsContent::default(),
             repl: None,
             server_url: None,
+            ui_language: None,
             session: None,
             status_bar: self.status_bar_settings_content(),
             tab_bar: self.tab_bar_settings_content(),

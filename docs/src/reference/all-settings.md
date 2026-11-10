@@ -4375,6 +4375,38 @@ Or to set a `socks5` proxy:
 
 If you wish to exclude certain hosts from using the proxy, set the `NO_PROXY` environment variable. This accepts a comma-separated list of hostnames, host suffixes, IPv4/IPv6 addresses or blocks that should not use the proxy. For example if your environment included `NO_PROXY="google.com, 192.168.1.0/24"` all hosts in `192.168.1.*`, `google.com` and `*.google.com` would bypass the proxy. See [reqwest NoProxy docs](https://docs.rs/reqwest/latest/reqwest/struct.NoProxy.html#method.from_string) for more.
 
+## UI Language {#ui-language}
+
+- Description: The language used by the user interface.
+- Setting: `ui_language`
+- Default: `system`
+
+**Options**
+
+1. Follow the operating system locale:
+
+```json [settings]
+{
+  "ui_language": "system"
+}
+```
+
+2. English:
+
+```json [settings]
+{
+  "ui_language": "en"
+}
+```
+
+3. Simplified Chinese:
+
+```json [settings]
+{
+  "ui_language": "zh-CN"
+}
+```
+
 ## Server URL {#server-url}
 
 - Description: URL of the Zed service.

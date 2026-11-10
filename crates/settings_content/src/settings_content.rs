@@ -289,6 +289,11 @@ pub struct SettingsContent {
     /// Default: off
     pub reduce_motion: Option<ReduceMotionMode>,
 
+    /// The language used by the user interface.
+    ///
+    /// Default: system
+    pub ui_language: Option<UILanguageContent>,
+
     /// The URL of the Zed server to connect to.
     pub server_url: Option<String>,
 
@@ -411,8 +416,8 @@ fallible_options::flattened_deserialize!(SettingsContent {
         git,
         global_lsp_settings, image_viewer, markdown_preview, repl, helix_mode, hide_mouse,
         journal, log, line_indicator_format, language_models, copilot, outline_panel, project_panel,
-        node, proxy, reduce_motion, server_url, credentials_url, session, telemetry, terminal,
-        title_bar, vim_mode, calls, which_key, vim, modeline_lines, feature_flags,
+        node, proxy, reduce_motion, ui_language, server_url, credentials_url, session, telemetry,
+        terminal, title_bar, vim_mode, calls, which_key, vim, modeline_lines, feature_flags,
         instrumentation,
     },
     defaults: {},
@@ -559,6 +564,37 @@ impl strum::VariantNames for BaseKeymapContent {
         "Cursor",
         "None",
     ];
+}
+
+/// The language used by the Kon user interface.
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Serialize,
+    Deserialize,
+    JsonSchema,
+    MergeFrom,
+    PartialEq,
+    Eq,
+    Default,
+    strum::VariantArray,
+)]
+pub enum UILanguageContent {
+    /// Follow the operating system locale.
+    #[default]
+    #[serde(rename = "system")]
+    System,
+    /// English.
+    #[serde(rename = "en")]
+    English,
+    /// Simplified Chinese.
+    #[serde(rename = "zh-CN")]
+    ChineseSimplified,
+}
+
+impl strum::VariantNames for UILanguageContent {
+    const VARIANTS: &'static [&'static str] = &["System", "English", "简体中文"];
 }
 
 /// Configuration of audio in Zed.

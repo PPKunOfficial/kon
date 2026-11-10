@@ -1109,7 +1109,7 @@ impl TitleBar {
                 div()
                     .id("disconnected")
                     .child(Icon::new(IconName::Disconnected).size(IconSize::Small))
-                    .tooltip(Tooltip::text("Disconnected"))
+                    .tooltip(Tooltip::text(i18n::tr("Disconnected")))
                     .into_any_element(),
             ),
             client::Status::UpgradeRequired => {
@@ -1125,7 +1125,7 @@ impl TitleBar {
                 };
 
                 Some(
-                    Button::new("connection-status", label)
+                    Button::new("connection-status", i18n::tr(label))
                         .label_size(LabelSize::Small)
                         .on_click(|_, window, cx| {
                             if let Some(auto_updater) = auto_update::AutoUpdater::get(cx)
@@ -1245,7 +1245,10 @@ impl TitleBar {
                                     .w_full()
                                     .gap_1()
                                     .justify_between()
-                                    .child(Label::new("Restart to update Zed").color(Color::Accent))
+                                    .child(
+                                        Label::new(i18n::tr("Restart to update Kon"))
+                                            .color(Color::Accent),
+                                    )
                                     .child(
                                         Icon::new(IconName::Download)
                                             .size(IconSize::Small)

@@ -6,6 +6,29 @@ use settings::Settings;
 use terminal_view::terminal_panel;
 use zed_actions::{Quit, assistant, debug_panel, dev, git_panel, project_panel};
 
+fn localize_menu(menu: &mut Menu) {
+    if let Some(name) = i18n::lookup(&menu.name) {
+        menu.name = name.into();
+    }
+
+    for item in &mut menu.items {
+        match item {
+            MenuItem::Action { name, .. } => {
+                if let Some(translated) = i18n::lookup(name) {
+                    *name = translated.into();
+                }
+            }
+            MenuItem::Submenu(submenu) => localize_menu(submenu),
+            MenuItem::SystemMenu(os_menu) => {
+                if let Some(translated) = i18n::lookup(&os_menu.name) {
+                    os_menu.name = translated.into();
+                }
+            }
+            MenuItem::Separator => {}
+        }
+    }
+}
+
 pub fn app_menus(cx: &mut App) -> Vec<Menu> {
     let mut view_items = vec![
         MenuItem::action(
@@ -336,5 +359,11 @@ pub fn app_menus(cx: &mut App) -> Vec<Menu> {
                 ),
             ],
         },
-    ]
+    ];
+
+    for menu in &mut menus {
+        localize_menu(menu);
+    }
+
+    menus
 }

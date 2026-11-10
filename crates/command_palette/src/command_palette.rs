@@ -35,6 +35,13 @@ use zed_actions::{OpenZedUrl, command_palette::Toggle};
 
 actions!(command_palette, [RemoveSelected]);
 
+fn localize_action_name(name: String) -> SharedString {
+    match i18n::lookup(&name) {
+        Some(translated) => SharedString::new_static(translated),
+        None => name.into(),
+    }
+}
+
 pub fn init(cx: &mut App) {
     CommandPaletteSettings::register(cx);
     command_palette_hooks::init(cx);
@@ -128,7 +135,7 @@ impl CommandPalette {
                 }
 
                 Some(Command {
-                    name: SharedString::from(humanize_action_name(action.name())),
+                    name: localize_action_name(humanize_action_name(action.name())),
                     action,
                     usage: None,
                 })
@@ -521,7 +528,7 @@ impl PickerDelegate for CommandPaletteDelegate {
     }
 
     fn placeholder_text(&self, _window: &mut Window, _cx: &mut App) -> Arc<str> {
-        "Execute a command...".into()
+        i18n::tr("Execute a command...").into()
     }
 
     fn select_history(

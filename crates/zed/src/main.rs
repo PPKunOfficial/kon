@@ -50,7 +50,7 @@ use project::{project_settings::ProjectSettings, trusted_worktrees};
 use recent_projects::{RemoteSettings, open_remote_project};
 use release_channel::{AppCommitSha, AppVersion, ReleaseChannel};
 use session::{AppSession, Session};
-use settings::{BaseKeymap, Settings, SettingsStore, watch_config_file};
+use settings::{BaseKeymap, LanguageSettings, Settings, SettingsStore, watch_config_file};
 use smol::future::poll_once;
 use std::{
     cell::RefCell,
@@ -496,6 +496,7 @@ fn main() {
             AppCommitSha::set_global(app_commit_sha, cx);
         }
         settings::init(cx);
+        i18n::set_language(LanguageSettings::get_global(cx).language);
         zlog_settings::init(cx);
         zed::watch_settings_files(fs.clone(), cx);
         handle_keymap_file_changes(user_keymap_file_rx, user_keymap_watcher, cx);
@@ -854,6 +855,17 @@ fn main() {
 
         let menus = app_menus(cx);
         cx.set_menus(menus);
+
+        cx.observe_global::<SettingsStore>(|cx| {
+            let language = LanguageSettings::get_global(cx).language;
+            if language != i18n::language() {
+                i18n::set_language(language);
+                let menus = app_menus(cx);
+                cx.set_menus(menus);
+                cx.refresh_windows();
+            }
+        })
+        .detach();
 
         if let Some(mut crash_handler) = crash_handler {
             let crash_handler2 = block_on(poll_once(&mut crash_handler));

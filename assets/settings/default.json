@@ -330,6 +330,15 @@
   // 2. Never reduce motion:
   //    "off"
   "reduce_motion": "off",
+  // The language used by the user interface.
+  //
+  // 1. Follow the operating system locale:
+  //    "system"
+  // 2. English:
+  //    "en"
+  // 3. Simplified Chinese:
+  //    "zh-CN"
+  "ui_language": "system",
   // Determines whether the focused panel follows the mouse location.
   "focus_follows_mouse": {
     "enabled": false,
