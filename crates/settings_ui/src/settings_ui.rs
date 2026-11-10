@@ -1245,7 +1245,7 @@ impl SettingsPageItem {
                         .child(
                             Button::new(
                                 ("sub-page".into(), sub_page_link.title.clone()),
-                                "Configure",
+                                i18n::tr("Configure"),
                             )
                             .aria_label(format!("Configure {}", sub_page_link.title))
                             .tab_index(0_isize)
@@ -1438,7 +1438,7 @@ fn render_settings_item_layout(
                     h_flex()
                         .w_full()
                         .gap_1()
-                        .child(Label::new(SharedString::new_static(title)))
+                        .child(Label::new(SharedString::new_static(i18n::tr(title))))
                         .when_some(reset_fn, |this, reset_to_default| {
                             this.child(
                                 IconButton::new("reset-to-default-btn", IconName::Undo)
@@ -1460,7 +1460,7 @@ fn render_settings_item_layout(
                         }),
                 )
                 .child(
-                    Label::new(SharedString::new_static(description))
+                    Label::new(SharedString::new_static(i18n::tr(description)))
                         .size(LabelSize::Small)
                         .color(Color::Muted)
                         .render_code_spans(),
@@ -1469,7 +1469,7 @@ fn render_settings_item_layout(
         .child(control)
         .when(settings_window.sub_page_stack.is_empty(), |this| {
             this.child(render_settings_item_link(
-                description,
+                i18n::tr(description),
                 json_path,
                 sub_field,
                 settings_window,
@@ -2442,17 +2442,31 @@ impl SettingsWindow {
                             .field
                             .json_path()
                             .map(|path| path.trim_end_matches('$'));
+                        let mut words = vec![page.title, header_str, item.title, item.description];
+                        if let Some(title) = i18n::lookup(page.title) {
+                            words.push(title);
+                        }
+                        if let Some(header) = i18n::lookup(header_str) {
+                            words.push(header);
+                        }
+                        if let Some(title) = i18n::lookup(item.title) {
+                            words.push(title);
+                        }
+                        if let Some(description) = i18n::lookup(item.description) {
+                            words.push(description);
+                        }
                         documents.push(SearchDocument {
                             id: key_index,
-                            words: split_into_words(&[
-                                page.title,
-                                header_str,
-                                item.title,
-                                item.description,
-                            ]),
+                            words: split_into_words(&words),
                         });
                         push_candidates(&mut fuzzy_match_candidates, key_index, item.title);
                         push_candidates(&mut fuzzy_match_candidates, key_index, item.description);
+                        if let Some(title) = i18n::lookup(item.title) {
+                            push_candidates(&mut fuzzy_match_candidates, key_index, title);
+                        }
+                        if let Some(description) = i18n::lookup(item.description) {
+                            push_candidates(&mut fuzzy_match_candidates, key_index, description);
+                        }
                     }
                     SettingsPageItem::SectionHeader(header) => {
                         documents.push(SearchDocument {

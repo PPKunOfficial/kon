@@ -7,6 +7,8 @@
 use std::sync::atomic::{AtomicU8, Ordering};
 
 mod zh_cn;
+mod zh_cn_descriptions;
+mod zh_cn_settings;
 
 /// A language supported by Kon's user interface.
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
@@ -93,7 +95,9 @@ pub fn tr(text: &'static str) -> &'static str {
 pub fn lookup(text: &str) -> Option<&'static str> {
     match language() {
         Language::English => None,
-        Language::ChineseSimplified => zh_cn::lookup(text),
+        Language::ChineseSimplified => zh_cn::lookup(text)
+            .or_else(|| zh_cn_settings::lookup(text))
+            .or_else(|| zh_cn_descriptions::lookup(text)),
     }
 }
 
@@ -123,6 +127,16 @@ mod tests {
         assert_eq!(super::zh_cn::lookup("File"), Some("文件"));
         assert_eq!(super::zh_cn::lookup("Open Settings"), Some("打开设置"));
         assert_eq!(super::zh_cn::lookup("Not a translated string"), None);
+    }
+
+    #[test]
+    fn has_settings_translations() {
+        assert_eq!(super::zh_cn_settings::lookup("Font Size"), Some("字体大小"));
+        assert_eq!(
+            super::zh_cn_descriptions::lookup("Show breadcrumbs."),
+            Some("显示面包屑导航。")
+        );
+        assert_eq!(super::zh_cn_settings::lookup("Not a setting"), None);
     }
 
     #[test]
