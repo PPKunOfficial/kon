@@ -926,7 +926,7 @@ fn render_zed_provider(
         .pt_8()
         .gap_1p5()
         .child(
-            SettingsSectionHeader::new("Kon Predictions")
+            SettingsSectionHeader::new("Zed Predictions")
                 .icon(IconName::ZedPredict)
                 .no_padding(true),
         )

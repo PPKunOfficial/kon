@@ -1212,7 +1212,7 @@ impl EditPredictionButton {
 
                 if zed_cloud_has_no_active_subscription {
                     menu = menu
-                        .header("Kon AI")
+                        .header("Zed AI")
                         .item(
                             ContextMenuEntry::new(
                                 "This organization has no active subscription",
