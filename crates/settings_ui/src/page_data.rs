@@ -140,8 +140,8 @@ fn general_page(cx: &App) -> SettingsPage {
         vec![
             SettingsPageItem::SectionHeader("General Settings"),
             SettingsPageItem::SettingItem(SettingItem {
-                title: i18n::tr("Language").into(),
-                description: i18n::tr("The language used by the user interface.").into(),
+                title: "Language",
+                description: "The language used by the user interface.",
                 field: Box::new(SettingField {
                     organization_override: None,
                     json_path: Some("ui_language"),

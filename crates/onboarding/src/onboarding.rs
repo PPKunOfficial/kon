@@ -374,7 +374,7 @@ impl Item for Onboarding {
     type Event = ItemEvent;
 
     fn tab_content_text(&self, _detail: usize, _cx: &App) -> SharedString {
-        "Onboarding".into()
+        i18n::tr("Onboarding").into()
     }
 
     fn telemetry_event_text(&self) -> Option<&'static str> {

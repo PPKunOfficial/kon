@@ -93,11 +93,11 @@ impl TimeBucket {
 
     fn label(&self) -> &'static str {
         match self {
-            TimeBucket::Today => "Today",
-            TimeBucket::Yesterday => "Yesterday",
-            TimeBucket::ThisWeek => "This Week",
-            TimeBucket::PastWeek => "Past Week",
-            TimeBucket::Older => "Older",
+            TimeBucket::Today => i18n::tr("Today"),
+            TimeBucket::Yesterday => i18n::tr("Yesterday"),
+            TimeBucket::ThisWeek => i18n::tr("This Week"),
+            TimeBucket::PastWeek => i18n::tr("Past Week"),
+            TimeBucket::Older => i18n::tr("Older"),
         }
     }
 }
@@ -171,7 +171,7 @@ impl ThreadsArchiveView {
 
         let filter_editor = cx.new(|cx| {
             let mut editor = Editor::single_line(window, cx);
-            editor.set_placeholder_text("Search all threads…", window, cx);
+            editor.set_placeholder_text(i18n::tr("Search all threads…"), window, cx);
             editor
         });
 
@@ -698,7 +698,7 @@ impl ThreadsArchiveView {
                                 .hover_background(button_hover_bg)
                                 .icon_size(IconSize::Small)
                                 .icon_color(Color::Muted)
-                                .tooltip(Tooltip::text("Cancel Restore"))
+                                .tooltip(Tooltip::text(i18n::tr("Cancel Restore")))
                                 .on_click({
                                     let thread_id = thread.thread_id;
                                     cx.listener(move |this, _, _, cx| {
@@ -720,7 +720,7 @@ impl ThreadsArchiveView {
                             .tooltip({
                                 move |_window, cx| {
                                     Tooltip::for_action_in(
-                                        "Delete Thread",
+                                        i18n::tr("Delete Thread"),
                                         &RemoveSelectedThread,
                                         &focus_handle,
                                         cx,
@@ -759,7 +759,7 @@ impl ThreadsArchiveView {
                             .tooltip({
                                 move |_window, cx| {
                                     Tooltip::for_action_in(
-                                        "Archive Thread",
+                                        i18n::tr("Archive Thread"),
                                         &ArchiveSelectedThread,
                                         &focus_handle,
                                         cx,
@@ -778,7 +778,7 @@ impl ThreadsArchiveView {
                         let thread = thread.clone();
                         cx.listener(move |this, _, window, cx| {
                             telemetry::event!(
-                                "Archived Thread Opened",
+                                i18n::tr("Archived Thread Opened"),
                                 agent = thread.agent_id.as_ref(),
                                 side = crate::agent_sidebar_side(cx)
                             );
@@ -924,7 +924,7 @@ impl ThreadsArchiveView {
                 this.child(
                     IconButton::new("clear-filter", IconName::Close)
                         .icon_size(IconSize::Small)
-                        .tooltip(Tooltip::text("Clear Search"))
+                        .tooltip(Tooltip::text(i18n::tr("Clear Search")))
                         .on_click(cx.listener(|this, _, window, cx| {
                             this.reset_filter_editor_text(window, cx);
                             this.update_items(cx);
@@ -965,9 +965,9 @@ impl ThreadsArchiveView {
         };
 
         let count_label = if entry_count == 1 {
-            "1 thread".to_string()
+            i18n::tr("1 thread").to_string()
         } else {
-            format!("{} threads", entry_count)
+            i18n::tr("{} threads").replace("{}", &entry_count.to_string())
         };
 
         h_flex()
@@ -989,7 +989,7 @@ impl ThreadsArchiveView {
                     .child(
                         IconButton::new("new-thread", IconName::Plus)
                             .icon_size(IconSize::Small)
-                            .tooltip(Tooltip::text("Start New Agent Thread"))
+                            .tooltip(Tooltip::text(i18n::tr("Start New Agent Thread")))
                             .on_click(cx.listener(|_this, _, _, cx| {
                                 cx.emit(ThreadsArchiveViewEvent::NewThread);
                             })),
@@ -997,7 +997,7 @@ impl ThreadsArchiveView {
                     .child(
                         IconButton::new("thread-import", IconName::Download)
                             .icon_size(IconSize::Small)
-                            .tooltip(Tooltip::text("Import Threads"))
+                            .tooltip(Tooltip::text(i18n::tr("Import Threads")))
                             .on_click(cx.listener(|_this, _, _, cx| {
                                 cx.emit(ThreadsArchiveViewEvent::Import);
                             })),
@@ -1009,9 +1009,9 @@ impl ThreadsArchiveView {
                             .toggle_state(self.thread_filter == ThreadFilter::ArchivedOnly)
                             .tooltip(Tooltip::text(
                                 if self.thread_filter == ThreadFilter::ArchivedOnly {
-                                    "Show All Threads"
+                                    i18n::tr("Show All Threads")
                                 } else {
-                                    "Show Only Archived Threads"
+                                    i18n::tr("Show Only Archived Threads")
                                 },
                             ))
                             .on_click(cx.listener(|this, _, _, cx| {
@@ -1064,9 +1064,9 @@ impl Render for ThreadsArchiveView {
 
         let content = if is_empty {
             let message = if has_query {
-                "No threads match your search."
+                i18n::tr("No threads match your search.")
             } else {
-                "No threads yet."
+                i18n::tr("No threads yet.")
             };
 
             v_flex()
@@ -1304,15 +1304,16 @@ impl PickerDelegate for ProjectPickerDelegate {
     }
 
     fn placeholder_text(&self, _window: &mut Window, _cx: &mut App) -> Arc<str> {
-        format!(
-            "Associate the \"{}\" thread with...",
-            self.thread
-                .title
-                .as_ref()
-                .map(|t| t.as_ref())
-                .unwrap_or(DEFAULT_THREAD_TITLE)
-        )
-        .into()
+        i18n::tr("Associate the \"{}\" thread with...")
+            .replace(
+                "{}",
+                self.thread
+                    .title
+                    .as_ref()
+                    .map(|t| t.as_ref())
+                    .unwrap_or(DEFAULT_THREAD_TITLE),
+            )
+            .into()
     }
 
     fn match_count(&self) -> usize {
@@ -1427,7 +1428,7 @@ impl PickerDelegate for ProjectPickerDelegate {
         };
 
         if has_siblings_to_show {
-            entries.push(ProjectPickerEntry::Header("This Window".into()));
+            entries.push(ProjectPickerEntry::Header(i18n::tr("This Window").into()));
 
             if is_empty_query {
                 for (id, workspace) in self.workspaces.iter().enumerate() {
@@ -1454,7 +1455,9 @@ impl PickerDelegate for ProjectPickerDelegate {
         };
 
         if has_recent_to_show {
-            entries.push(ProjectPickerEntry::Header("Recent Projects".into()));
+            entries.push(ProjectPickerEntry::Header(
+                i18n::tr("Recent Projects").into(),
+            ));
 
             if is_empty_query {
                 for (id, workspace) in self.workspaces.iter().enumerate() {
@@ -1504,9 +1507,9 @@ impl PickerDelegate for ProjectPickerDelegate {
 
     fn no_matches_text(&self, _window: &mut Window, _cx: &mut App) -> Option<SharedString> {
         let text = if self.workspaces.is_empty() {
-            "No recent projects found"
+            i18n::tr("No recent projects found")
         } else {
-            "No matches"
+            i18n::tr("No matches")
         };
         Some(text.into())
     }
@@ -1623,7 +1626,7 @@ impl PickerDelegate for ProjectPickerDelegate {
                 .border_t_1()
                 .border_color(cx.theme().colors().border_variant)
                 .child(
-                    Button::new("open_local_folder", "Choose from Local Folders")
+                    Button::new("open_local_folder", i18n::tr("Choose from Local Folders"))
                         .key_binding(KeyBinding::for_action_in(
                             &workspace::Open::default(),
                             &focus_handle,
@@ -1634,7 +1637,7 @@ impl PickerDelegate for ProjectPickerDelegate {
                         })),
                 )
                 .child(
-                    Button::new("select_project", "Select")
+                    Button::new("select_project", i18n::tr("Select"))
                         .disabled(!has_selection)
                         .key_binding(KeyBinding::for_action_in(&menu::Confirm, &focus_handle, cx))
                         .on_click(cx.listener(move |picker, _, window, cx| {
