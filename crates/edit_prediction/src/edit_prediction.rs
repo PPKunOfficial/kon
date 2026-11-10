@@ -84,7 +84,6 @@ mod license_detection;
 pub mod mercury;
 pub mod metrics;
 pub mod ollama;
-mod onboarding_modal;
 pub mod open_ai_response;
 mod prediction;
 pub mod sweep_prompt;
@@ -104,7 +103,6 @@ use crate::example_spec::RecentFile;
 use crate::license_detection::LicenseDetectionWatcher;
 use crate::mercury::Mercury;
 pub use crate::metrics::{KeptRateResult, compute_kept_rate};
-use crate::onboarding_modal::ZedPredictModal;
 use crate::prediction::EditPredictionResult;
 pub use crate::prediction::{EditPrediction, EditPredictionId, EditPredictionInputs};
 pub use language_model::ApiKeyState;
@@ -3527,39 +3525,6 @@ pub struct ZedUpdateRequiredError {
 #[error("Cloud request timed out")]
 pub(crate) struct CloudRequestTimeoutError;
 
-struct ZedPredictUpsell;
-
-fn is_upsell_dismissed(cx: &App) -> bool {
-    // To make this backwards compatible with older versions of Zed, we
-    // check if the user has seen the previous Edit Prediction Onboarding
-    // before, by checking the data collection choice which was written to
-    // the database once the user clicked on "Accept and Enable"
-    let kvp = KeyValueStore::global(cx);
-    if kvp
-        .read_kvp(ZED_PREDICT_DATA_COLLECTION_CHOICE)
-        .log_err()
-        .is_some_and(|s| s.is_some())
-    {
-        return true;
-    }
-
-    kvp.read_kvp(ZedPredictUpsell::KEY)
-        .log_err()
-        .is_some_and(|s| s.is_some())
-}
-
-impl Dismissable for ZedPredictUpsell {
-    const KEY: &'static str = "dismissed-edit-predict-upsell";
-
-    fn dismissed(cx: &App) -> bool {
-        is_upsell_dismissed(cx)
-    }
-}
-
-pub fn should_show_upsell_modal(cx: &App) -> bool {
-    !is_upsell_dismissed(cx)
-}
-
 /// Returns whether the user is set up to use Zed's hosted edit predictions but their plan
 /// doesn't include them. Other providers, including Ollama and OpenAI-compatible servers that
 /// run Zeta, don't go through Zed's servers and are unaffected.
@@ -3642,18 +3607,6 @@ fn show_free_plan_edit_predictions_ended_notice_once(user_store: &Entity<UserSto
 
 pub fn init(cx: &mut App) {
     cx.observe_new(move |workspace: &mut Workspace, _, _cx| {
-        workspace.register_action(
-            move |workspace, _: &zed_actions::OpenZedPredictOnboarding, window, cx| {
-                ZedPredictModal::toggle(
-                    workspace,
-                    workspace.user_store().clone(),
-                    workspace.client().clone(),
-                    window,
-                    cx,
-                )
-            },
-        );
-
         workspace.register_action(|workspace, _: &ResetOnboarding, _window, cx| {
             update_settings_file(workspace.app_state().fs.clone(), cx, move |settings, _| {
                 settings

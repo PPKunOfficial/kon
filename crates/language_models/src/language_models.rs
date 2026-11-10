@@ -233,14 +233,6 @@ fn register_language_model_providers(
     cx: &mut Context<LanguageModelRegistry>,
 ) {
     registry.register_provider(
-        Arc::new(CloudLanguageModelProvider::new(
-            user_store,
-            client.clone(),
-            cx,
-        )),
-        cx,
-    );
-    registry.register_provider(
         Arc::new(AnthropicLanguageModelProvider::new(
             client.http_client(),
             credentials_provider.clone(),
@@ -353,6 +345,14 @@ fn register_language_model_providers(
         cx,
     );
     registry.register_provider(Arc::new(CopilotChatLanguageModelProvider::new(cx)), cx);
+    registry.register_provider(
+        Arc::new(CloudLanguageModelProvider::new(
+            user_store,
+            client.clone(),
+            cx,
+        )),
+        cx,
+    );
     registry.register_provider(
         Arc::new(OpenAiSubscribedProvider::new(
             client.http_client(),

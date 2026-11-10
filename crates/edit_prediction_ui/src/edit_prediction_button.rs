@@ -394,36 +394,6 @@ impl Render for EditPredictionButton {
                     }
                 };
 
-                if edit_prediction::should_show_upsell_modal(cx) {
-                    let tooltip_meta = if self.user_store.read(cx).current_user().is_some() {
-                        "Choose a Plan"
-                    } else {
-                        "Configure a Provider"
-                    };
-
-                    return div().child(
-                        IconButton::new("zed-predict-pending-button", ep_icon)
-                            .shape(IconButtonShape::Square)
-                            .tab_index(0isize)
-                            .aria_label("Edit Predictions")
-                            .indicator(Indicator::dot().color(Color::Muted))
-                            .indicator_border_color(Some(cx.theme().colors().status_bar_background))
-                            .tooltip(move |_window, cx| {
-                                Tooltip::with_meta("Edit Predictions", None, tooltip_meta, cx)
-                            })
-                            .on_click(cx.listener(move |_, _, window, cx| {
-                                telemetry::event!(
-                                    "Pending ToS Clicked",
-                                    source = "Edit Prediction Status Button"
-                                );
-                                window.dispatch_action(
-                                    zed_actions::OpenZedPredictOnboarding.boxed_clone(),
-                                    cx,
-                                );
-                            })),
-                    );
-                }
-
                 let mut over_limit = false;
 
                 if let Some(usage) = self
@@ -1242,7 +1212,7 @@ impl EditPredictionButton {
 
                 if zed_cloud_has_no_active_subscription {
                     menu = menu
-                        .header("Zed AI")
+                        .header("Kon AI")
                         .item(
                             ContextMenuEntry::new(
                                 "This organization has no active subscription",
