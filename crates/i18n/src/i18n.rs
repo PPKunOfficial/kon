@@ -9,6 +9,7 @@ use std::sync::atomic::{AtomicU8, Ordering};
 mod zh_cn;
 mod zh_cn_descriptions;
 mod zh_cn_settings;
+mod zh_cn_settings_controls;
 
 /// A language supported by Kon's user interface.
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
@@ -97,6 +98,7 @@ pub fn lookup(text: &str) -> Option<&'static str> {
         Language::English => None,
         Language::ChineseSimplified => zh_cn::lookup(text)
             .or_else(|| zh_cn_settings::lookup(text))
+            .or_else(|| zh_cn_settings_controls::lookup(text))
             .or_else(|| zh_cn_descriptions::lookup(text)),
     }
 }
@@ -137,6 +139,18 @@ mod tests {
             Some("显示面包屑导航。")
         );
         assert_eq!(super::zh_cn_settings::lookup("Not a setting"), None);
+    }
+
+    #[test]
+    fn has_settings_control_translations() {
+        assert_eq!(
+            super::zh_cn_settings_controls::lookup("CurrentProjectDirectory"),
+            Some("当前项目目录")
+        );
+        assert_eq!(
+            super::zh_cn_settings_controls::lookup("Edit in settings.json"),
+            Some("在 settings.json 中编辑")
+        );
     }
 
     #[test]
