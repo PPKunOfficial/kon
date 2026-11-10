@@ -861,24 +861,22 @@ impl Client {
     }
 
     pub async fn has_credentials(&self, cx: &AsyncApp) -> bool {
-        if !cfg!(any(test, feature = "test-support")) {
-            return false;
-        }
-
         self.credentials_provider
             .read_credentials(cx)
             .await
             .is_some()
     }
 
+    /// Signs in to a Zed account.
+    ///
+    /// Kon only uses account authentication for Zed AI (hosted models), so the
+    /// AI provider surfaces this entry point while the title bar and
+    /// collaboration panel keep their sign-in UI removed.
     pub async fn sign_in(
         self: &Arc<Self>,
         try_provider: bool,
         cx: &AsyncApp,
     ) -> Result<Credentials> {
-        if !cfg!(any(test, feature = "test-support")) {
-            anyhow::bail!("Sign-in is disabled in Kon");
-        }
         let is_reauthenticating = if self.status().borrow().is_signed_out() {
             self.set_status(Status::Authenticating, cx);
             false
