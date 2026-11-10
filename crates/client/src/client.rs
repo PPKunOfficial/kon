@@ -536,8 +536,9 @@ impl settings::Settings for TelemetrySettings {
     fn from_settings(content: &SettingsContent) -> Self {
         let telemetry = content.telemetry.as_ref().unwrap();
         Self {
-            diagnostics: telemetry.diagnostics.unwrap(),
-            metrics: telemetry.metrics.unwrap(),
+            // Telemetry is permanently disabled in Kon.
+            diagnostics: false,
+            metrics: false,
             anthropic_retention: telemetry.anthropic_retention.unwrap(),
         }
     }

@@ -95,11 +95,8 @@ pub static MINIDUMP_ENDPOINT: LazyLock<Option<String>> = LazyLock::new(|| {
         .or_else(|| env::var("ZED_MINIDUMP_ENDPOINT").ok())
 });
 
-pub fn should_install_crash_handler(channel: ReleaseChannel) -> bool {
-    matches!(
-        env::var("ZED_GENERATE_MINIDUMPS").as_deref(),
-        Ok("true" | "1")
-    ) || (channel != ReleaseChannel::Dev && MINIDUMP_ENDPOINT.is_some())
+pub fn should_install_crash_handler(_channel: ReleaseChannel) -> bool {
+    false
 }
 
 static DOTNET_PROJECT_FILES_REGEX: LazyLock<Regex> = LazyLock::new(|| {
@@ -210,18 +207,6 @@ impl Telemetry {
             app_version: release_channel::AppVersion::global(cx).to_string(),
             subscribers: Vec::new(),
         }));
-
-        cx.background_spawn({
-            let state = state.clone();
-            let os_version = os_version();
-            state.lock().os_version = Some(os_version);
-            async move {
-                if let Some(tempfile) = File::create(Self::log_file_path()).ok() {
-                    state.lock().log_file = Some(tempfile);
-                }
-            }
-        })
-        .detach();
 
         cx.observe_global::<SettingsStore>({
             let state = state.clone();
@@ -658,6 +643,10 @@ impl Telemetry {
     }
 
     pub async fn flush_events_inner(self: &Arc<Self>) -> Result<()> {
+        if !self.metrics_enabled() {
+            return Ok(());
+        }
+
         let (json_bytes, request_body) = {
             let mut state = self.state.lock();
             state.first_event_date_time = None;
