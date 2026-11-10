@@ -2702,33 +2702,8 @@ impl CollabPanel {
             ))
     }
 
-    fn render_signed_out(&mut self, cx: &mut Context<Self>) -> Div {
+    fn render_signed_out(&mut self, _cx: &mut Context<Self>) -> Div {
         let collab_blurb = "Work with your team in realtime with collaborative editing, voice, shared notes and more.";
-
-        // Two distinct "not connected" states:
-        //   - Authenticated (has credentials): user just needs to connect.
-        //   - Unauthenticated (no credentials): user needs to sign in via GitHub.
-        let is_authenticated = self.client.user_id().is_some();
-        let status = *self.client.status().borrow();
-        let is_busy = status.is_signing_in();
-
-        let (button_id, button_label, button_icon) = if is_authenticated {
-            (
-                "connect",
-                if is_busy { "Connecting…" } else { "Connect" },
-                IconName::Public,
-            )
-        } else {
-            (
-                "sign_in",
-                if is_busy {
-                    "Signing in…"
-                } else {
-                    "Sign In with GitHub"
-                },
-                IconName::Github,
-            )
-        };
 
         v_flex()
             .p_4()

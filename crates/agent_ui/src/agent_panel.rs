@@ -1464,7 +1464,6 @@ impl AgentPanel {
         let user_store = workspace.app_state().user_store.clone();
         let project = workspace.project();
         let language_registry = project.read(cx).languages().clone();
-        let client = workspace.client().clone();
         let workspace_id = workspace.database_id();
         let workspace = workspace.weak_handle();
 
@@ -1475,21 +1474,7 @@ impl AgentPanel {
 
         let base_view = BaseView::Uninitialized;
 
-        let weak_panel = cx.entity().downgrade();
-        let onboarding = cx.new(|cx| {
-            AgentPanelOnboarding::new(
-                user_store.clone(),
-                client,
-                move |_window, cx| {
-                    weak_panel
-                        .update(cx, |panel, cx| {
-                            panel.dismiss_ai_onboarding(cx);
-                        })
-                        .ok();
-                },
-                cx,
-            )
-        });
+        let onboarding = cx.new(AgentPanelOnboarding::new);
 
         // Subscribe to extension events to sync agent servers when extensions change
         let extension_subscription = ExtensionStore::try_global(cx).map(|store| {

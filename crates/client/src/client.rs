@@ -91,8 +91,6 @@ pub const CONNECTION_TIMEOUT: Duration = Duration::from_secs(20);
 actions!(
     client,
     [
-        /// Signs in to Zed account.
-        SignIn,
         /// Signs out of Zed account.
         SignOut,
         /// Reconnects to the collaboration server.
@@ -166,15 +164,6 @@ impl Settings for ProxySettings {
 pub fn init(client: &Arc<Client>, cx: &mut App) {
     let client = Arc::downgrade(client);
     cx.on_action({
-        let client = client.clone();
-        move |_: &SignIn, cx| {
-            if let Some(client) = client.upgrade() {
-                cx.spawn(async move |cx| client.sign_in_with_optional_connect(true, cx).await)
-                    .detach_and_log_err(cx);
-            }
-        }
-    })
-    .on_action({
         let client = client.clone();
         move |_: &SignOut, cx| {
             if let Some(client) = client.upgrade() {
@@ -871,6 +860,10 @@ impl Client {
     }
 
     pub async fn has_credentials(&self, cx: &AsyncApp) -> bool {
+        if !cfg!(any(test, feature = "test-support")) {
+            return false;
+        }
+
         self.credentials_provider
             .read_credentials(cx)
             .await

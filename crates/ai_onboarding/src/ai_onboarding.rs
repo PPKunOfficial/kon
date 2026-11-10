@@ -159,31 +159,17 @@ impl ZedAiOnboarding {
     }
 
     fn render_sign_in_disclaimer(&self, _cx: &mut App) -> AnyElement {
-        let signing_in = matches!(self.sign_in_status, SignInStatus::SigningIn);
-
         v_flex()
             .w_full()
             .relative()
             .gap_1()
-            .child(Headline::new("Welcome to Zed AI"))
+            .child(Headline::new("Zed AI is unavailable"))
             .child(
-                Label::new("Sign in to try GPT Luna. Your 14 days begin when you start the trial.")
-                    .color(Color::Muted)
-                    .mb_2(),
-            )
-            .child(PlanDefinitions.sign_in_upsell())
-            .child(
-                Button::new("sign_in", "Sign In to Try GPT Luna")
-                    .disabled(signing_in)
-                    .full_width()
-                    .style(ButtonStyle::Tinted(ui::TintColor::Accent))
-                    .on_click({
-                        let callback = self.sign_in.clone();
-                        move |_, window, cx| {
-                            telemetry::event!("Start Trial Clicked", state = "pre-sign-in");
-                            callback(window, cx)
-                        }
-                    }),
+                Label::new(
+                    "Account sign-in is disabled in Kon. Configure another AI provider in Settings to use the agent.",
+                )
+                .color(Color::Muted)
+                .mb_2(),
             )
             .children(self.render_dismiss_button())
             .into_any_element()
