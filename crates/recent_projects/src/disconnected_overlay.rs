@@ -201,7 +201,7 @@ impl Render for DisconnectedOverlay {
                                 )
                                 .when(can_reconnect, |el| {
                                     el.child(
-                                        Button::new("reconnect", "Reconnect")
+                                        Button::new("reconnect", i18n::tr("Reconnect"))
                                             .style(ButtonStyle::Filled)
                                             .layer(ElevationIndex::ModalSurface)
                                             .start_icon(Icon::new(IconName::ArrowCircle))

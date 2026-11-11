@@ -88,9 +88,11 @@ impl Render for SecurityModal {
 
         let restricted_count = self.restricted_paths.len();
         let header_label: SharedString = if restricted_count == 1 {
-            "Unrecognized Project".into()
+            i18n::tr("Unrecognized Project").into()
         } else {
-            format!("Unrecognized Projects ({})", restricted_count).into()
+            i18n::tr("Unrecognized Projects ({})")
+                .replace("{}", &restricted_count.to_string())
+                .into()
         };
 
         let path_style = self.path_style(cx);
@@ -190,24 +192,33 @@ impl Render for SecurityModal {
                     .child(
                         v_flex()
                             .child(
-                                Label::new(
+                                Label::new(i18n::tr(
                                     "Untrusted projects are opened in Restricted Mode to protect your system.",
-                                )
+                                ))
                                 .color(Color::Muted),
                             )
                             .child(
-                                Label::new(
+                                Label::new(i18n::tr(
                                     "Review .zed/settings.json for any extensions or commands configured by this project.",
-                                )
+                                ))
                                 .color(Color::Muted),
                             ),
                     )
                     .child(
                         v_flex()
-                            .child(Label::new("Restricted Mode prevents:").color(Color::Muted))
-                            .child(ListBulletItem::new("Project settings from being applied"))
-                            .child(ListBulletItem::new("Language servers from running"))
-                            .child(ListBulletItem::new("MCP Server integrations from installing")),
+                            .child(
+                                Label::new(i18n::tr("Restricted Mode prevents:"))
+                                    .color(Color::Muted),
+                            )
+                            .child(ListBulletItem::new(i18n::tr(
+                                "Project settings from being applied",
+                            )))
+                            .child(ListBulletItem::new(i18n::tr(
+                                "Language servers from running",
+                            )))
+                            .child(ListBulletItem::new(i18n::tr(
+                                "MCP Server integrations from installing",
+                            ))),
                     )
                     .map(|this| {
                         let Some(trust_label) = trust_label else {
@@ -230,7 +241,7 @@ impl Render for SecurityModal {
                                             "trust-parents",
                                             ToggleState::from(self.trust_parents),
                                         )
-                                        .label("Trust all projects in")
+                                        .label(i18n::tr("Trust all projects in"))
                                         .on_click(cx.listener(
                                             |security_modal, state: &ToggleState, _, cx| {
                                                 let trust_parents = state.selected();
@@ -277,7 +288,7 @@ impl Render for SecurityModal {
                     .gap_1()
                     .justify_end()
                     .child(
-                        Button::new("rm", "Stay in Restricted Mode")
+                        Button::new("rm", i18n::tr("Stay in Restricted Mode"))
                             .key_binding(
                                 KeyBinding::for_action(
                                     &ToggleWorktreeSecurity,
@@ -292,7 +303,7 @@ impl Render for SecurityModal {
                             })),
                     )
                     .child(
-                        Button::new("tc", "Trust and Continue")
+                        Button::new("tc", i18n::tr("Trust and Continue"))
                             .style(ButtonStyle::Filled)
                             .layer(ui::ElevationIndex::ModalSurface)
                             .key_binding(
@@ -372,17 +383,23 @@ impl SecurityModal {
         match available_parents.len() {
             0 => {
                 if has_restricted_files {
-                    Some(Cow::Borrowed("Trust all single files"))
+                    Some(Cow::Borrowed(i18n::tr("Trust all single files")))
                 } else {
                     None
                 }
             }
-            1 => Some(Cow::Owned(format!(
-                "Trust all projects in the {:} folder",
-                self.shorten_path(available_parents[0], path_style)
-                    .display()
+            1 => Some(Cow::Owned(
+                i18n::tr("Trust all projects in the {} folder").replace(
+                    "{}",
+                    &self
+                        .shorten_path(available_parents[0], path_style)
+                        .display()
+                        .to_string(),
+                ),
+            )),
+            _ => Some(Cow::Borrowed(i18n::tr(
+                "Trust all projects in the parent folders",
             ))),
-            _ => Some(Cow::Borrowed("Trust all projects in the parent folders")),
         }
     }
 

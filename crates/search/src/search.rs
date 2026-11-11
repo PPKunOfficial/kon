@@ -111,12 +111,12 @@ impl SearchOption {
 
     pub fn label(&self) -> &'static str {
         match self {
-            SearchOption::WholeWord => "Match Whole Words",
-            SearchOption::CaseSensitive => "Match Case Sensitivity",
-            SearchOption::IncludeIgnored => "Also search files ignored by configuration",
-            SearchOption::Regex => "Use Regular Expressions",
-            SearchOption::OneMatchPerLine => "One Match Per Line",
-            SearchOption::Backwards => "Search Backwards",
+            SearchOption::WholeWord => i18n::tr("Match Whole Words"),
+            SearchOption::CaseSensitive => i18n::tr("Match Case Sensitivity"),
+            SearchOption::IncludeIgnored => i18n::tr("Also search files ignored by configuration"),
+            SearchOption::Regex => i18n::tr("Use Regular Expressions"),
+            SearchOption::OneMatchPerLine => i18n::tr("One Match Per Line"),
+            SearchOption::Backwards => i18n::tr("Search Backwards"),
         }
     }
 

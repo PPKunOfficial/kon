@@ -7,6 +7,7 @@
 use std::sync::atomic::{AtomicU8, Ordering};
 
 mod zh_cn;
+mod zh_cn_actions;
 mod zh_cn_descriptions;
 mod zh_cn_settings;
 mod zh_cn_settings_controls;
@@ -97,6 +98,7 @@ pub fn lookup(text: &str) -> Option<&'static str> {
     match language() {
         Language::English => None,
         Language::ChineseSimplified => zh_cn::lookup(text)
+            .or_else(|| zh_cn_actions::lookup(text))
             .or_else(|| zh_cn_settings::lookup(text))
             .or_else(|| zh_cn_settings_controls::lookup(text))
             .or_else(|| zh_cn_descriptions::lookup(text)),
@@ -150,6 +152,22 @@ mod tests {
         assert_eq!(
             super::zh_cn_settings_controls::lookup("Edit in settings.json"),
             Some("在 settings.json 中编辑")
+        );
+    }
+
+    #[test]
+    fn has_action_name_translations() {
+        assert_eq!(
+            super::zh_cn_actions::lookup("editor: go to definition"),
+            Some("编辑器：转到定义")
+        );
+        assert_eq!(
+            super::zh_cn_actions::lookup("workspace: toggle left dock"),
+            Some("工作区：切换左侧停靠栏")
+        );
+        assert_eq!(
+            super::zh_cn_actions::lookup("editor: not a real action"),
+            None
         );
     }
 

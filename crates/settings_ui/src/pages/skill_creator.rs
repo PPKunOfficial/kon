@@ -193,7 +193,7 @@ impl SkillCreatorPage {
                 buffer
             });
             let mut editor = Editor::for_buffer(buffer, None, window, cx);
-            editor.set_placeholder_text("Add skill content…", window, cx);
+            editor.set_placeholder_text(i18n::tr("Add skill content…"), window, cx);
             editor.set_soft_wrap_mode(SoftWrap::EditorWidth, cx);
             editor.set_show_gutter(false, cx);
             editor.set_show_wrap_guides(false, cx);
@@ -704,20 +704,19 @@ impl SkillCreatorPage {
             .child(
                 h_flex()
                     .gap_1()
-                    .child(Label::new("Import from URL"))
-                    .child(Label::new("(optional)").color(Color::Muted)),
+                    .child(Label::new(i18n::tr("Import from URL")))
+                    .child(Label::new(i18n::tr("(optional)")).color(Color::Muted)),
             )
             .child(self.url_editor.clone())
             .child(match &self.url_import_status {
-                UrlImportStatus::Idle => Label::new(
-                    "Paste a GitHub .md URL to fetch it and fill out the form. \
-                     For private files, Zed retries using GITHUB_TOKEN, if set.",
-                )
+                UrlImportStatus::Idle => Label::new(i18n::tr(
+                    "Paste a GitHub .md URL to fetch it and fill out the form. For private files, Zed retries using GITHUB_TOKEN, if set.",
+                ))
                 .size(LabelSize::Small)
                 .color(Color::Muted)
                 .into_any_element(),
                 UrlImportStatus::Fetching => {
-                    LoadingLabel::new("Fetching and parsing…").into_any_element()
+                    LoadingLabel::new(i18n::tr("Fetching and parsing…")).into_any_element()
                 }
                 UrlImportStatus::Error(error) => h_flex()
                     .gap_1()
@@ -744,7 +743,7 @@ impl SkillCreatorPage {
             .child(
                 v_flex()
                     .gap_2()
-                    .child(Label::new("Front-matter"))
+                    .child(Label::new(i18n::tr("Front-matter")))
                     .child(self.name_editor.clone())
                     .child(self.description_editor.clone()),
             )
@@ -755,7 +754,7 @@ impl SkillCreatorPage {
                     .flex_grow_1()
                     .flex_shrink_0()
                     .gap_2()
-                    .child(Label::new("Skill Content"))
+                    .child(Label::new(i18n::tr("Skill Content")))
                     .child(self.render_body_field(window, cx))
                     .when_some(self.body_error, |this, error| {
                         this.child(Label::new(error).size(LabelSize::Small).color(Color::Error))

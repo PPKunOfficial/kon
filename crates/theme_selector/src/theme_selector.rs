@@ -383,7 +383,7 @@ impl PickerDelegate for ThemeSelectorDelegate {
     }
 
     fn placeholder_text(&self, _window: &mut Window, _cx: &mut App) -> Arc<str> {
-        "Select Theme...".into()
+        i18n::tr("Select Theme...").into()
     }
 
     fn match_count(&self) -> usize {
@@ -541,7 +541,7 @@ impl PickerDelegate for ThemeSelectorDelegate {
                 .border_t_1()
                 .border_color(cx.theme().colors().border_variant)
                 .child(
-                    Button::new("docs", "View Theme Docs")
+                    Button::new("docs", i18n::tr("View Theme Docs"))
                         .end_icon(
                             Icon::new(IconName::ArrowUpRight)
                                 .size(IconSize::Small)

@@ -223,7 +223,7 @@ impl PickerDelegate for DevContainerPickerDelegate {
     }
 
     fn placeholder_text(&self, _window: &mut Window, _cx: &mut App) -> Arc<str> {
-        "Select Dev Container Configuration".into()
+        i18n::tr("Select Dev Container Configuration").into()
     }
 
     fn update_matches(
@@ -363,7 +363,11 @@ impl EditNicknameState {
             .and_then(|state| state.nickname)
             .filter(|text| !text.is_empty());
         this.editor.update(cx, |this, cx| {
-            this.set_placeholder_text("Add a nickname for this server", window, cx);
+            this.set_placeholder_text(
+                i18n::tr("Add a nickname for this server"),
+                window,
+                cx,
+            );
             if let Some(starting_text) = starting_text {
                 this.set_text(starting_text, window, cx);
             }
@@ -1025,7 +1029,7 @@ impl RemoteServerPickerDelegate {
                         .text_ellipsis()
                         .when(is_wsl, |this| {
                             this.child(
-                                Label::new("WSL:")
+                                Label::new(i18n::tr("WSL:"))
                                     .size(LabelSize::Small)
                                     .color(Color::Muted),
                             )
@@ -1094,7 +1098,7 @@ impl PickerDelegate for RemoteServerPickerDelegate {
     }
 
     fn placeholder_text(&self, _window: &mut Window, _cx: &mut App) -> Arc<str> {
-        "Search remote projects…".into()
+        i18n::tr("Search remote projects…").into()
     }
 
     fn no_matches_text(&self, _window: &mut Window, _cx: &mut App) -> Option<SharedString> {
@@ -1320,7 +1324,7 @@ impl PickerDelegate for RemoteServerPickerDelegate {
                                     .icon_size(IconSize::Small)
                                     .shape(IconButtonShape::Square)
                                     .size(ButtonSize::Large)
-                                    .tooltip(Tooltip::text("Delete Remote Project"))
+                                    .tooltip(Tooltip::text(i18n::tr("Delete Remote Project")))
                                     .on_click(cx.listener(move |_, _, _, cx| {
                                         let remote_project = remote_project.clone();
                                         remote_server_projects
@@ -2344,7 +2348,9 @@ impl RemoteServerProjects {
                                         .start_slot(
                                             Icon::new(IconName::XCircle).color(Color::Error),
                                         )
-                                        .child(Label::new("Error Creating Dev Container:"))
+                                        .child(Label::new(i18n::tr(
+                                            "Error Creating Dev Container:",
+                                        )))
                                         .child(Label::new(message).buffer_font(cx)),
                                 ),
                             ),
@@ -2449,7 +2455,9 @@ impl RemoteServerProjects {
                                         h_flex()
                                             .opacity(0.6)
                                             .gap_1()
-                                            .child(Label::new("Creating Dev Container"))
+                                            .child(Label::new(i18n::tr(
+                                                "Creating Dev Container",
+                                            )))
                                             .child(LoadingLabel::new("")),
                                     ),
                             ),
@@ -2736,7 +2744,7 @@ impl RemoteServerProjects {
                         .inset(true)
                         .spacing(ui::ListItemSpacing::Sparse)
                         .start_slot(Icon::new(IconName::Trash).color(Color::Error))
-                        .child(Label::new("Remove Distro").color(Color::Error))
+                        .child(Label::new(i18n::tr("Remove Distro")).color(Color::Error))
                         .on_click(cx.listener(move |_, _, window, cx| {
                             remove_wsl_distro(cx.entity(), index, distro_name.clone(), window, cx);
                         })),
@@ -2827,7 +2835,7 @@ impl RemoteServerProjects {
                             .inset(true)
                             .spacing(ui::ListItemSpacing::Sparse)
                             .start_slot(Icon::new(IconName::Copy).color(Color::Muted))
-                            .child(Label::new("Copy Server Address"))
+                            .child(Label::new(i18n::tr("Copy Server Address")))
                             .end_slot(Label::new(connection_string.clone()).color(Color::Muted))
                             .show_end_slot_on_hover()
                             .on_click({
@@ -2891,7 +2899,7 @@ impl RemoteServerProjects {
                             .inset(true)
                             .spacing(ui::ListItemSpacing::Sparse)
                             .start_slot(Icon::new(IconName::Trash).color(Color::Error))
-                            .child(Label::new("Remove Server").color(Color::Error))
+                            .child(Label::new(i18n::tr("Remove Server")).color(Color::Error))
                             .on_click(cx.listener(move |_, _, window, cx| {
                                 remove_ssh_server(
                                     cx.entity(),

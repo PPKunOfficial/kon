@@ -932,7 +932,7 @@ impl PickerDelegate for RecentProjectsDelegate {
     }
 
     fn placeholder_text(&self, _window: &mut Window, _cx: &mut App) -> Arc<str> {
-        "Search projects…".into()
+        i18n::tr("Search projects…").into()
     }
 
     fn match_count(&self) -> usize {
@@ -1702,7 +1702,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                                     .w_full()
                                     .gap_1()
                                     .justify_between()
-                                    .child(Label::new("Open Local Folders"))
+                                    .child(Label::new(i18n::tr("Open Local Folders")))
                                     .child(KeyBinding::for_action_in(
                                         &workspace::Open {
                                             create_new_window: Some(self.create_new_window),
@@ -1731,7 +1731,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                                     .w_full()
                                     .gap_1()
                                     .justify_between()
-                                    .child(Label::new("Open Remote Folder"))
+                                    .child(Label::new(i18n::tr("Open Remote Folder")))
                                     .child(KeyBinding::for_action(
                                         &OpenRemote {
                                             from_existing_connection: false,
@@ -1771,7 +1771,7 @@ impl PickerDelegate for RecentProjectsDelegate {
 
         let secondary_footer_actions: Option<AnyElement> = match selected_entry {
             Some(ProjectPickerEntry::OpenFolder { .. }) => Some(
-                Button::new("remove_selected", "Remove Folder")
+                Button::new("remove_selected", i18n::tr("Remove Folder"))
                     .key_binding(KeyBinding::for_action_in(
                         &RemoveSelected,
                         &focus_handle,
@@ -1783,7 +1783,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                     .into_any_element(),
             ),
             Some(ProjectPickerEntry::ProjectGroup(_)) if !is_current_workspace_entry => Some(
-                Button::new("remove_selected", "Remove from Window")
+                Button::new("remove_selected", i18n::tr("Remove from Window"))
                     .key_binding(KeyBinding::for_action_in(
                         &RemoveSelected,
                         &focus_handle,
@@ -1795,7 +1795,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                     .into_any_element(),
             ),
             Some(ProjectPickerEntry::RecentProject(_)) => Some(
-                Button::new("delete_recent", "Remove")
+                Button::new("delete_recent", i18n::tr("Remove"))
                     .key_binding(KeyBinding::for_action_in(
                         &RemoveSelected,
                         &focus_handle,
@@ -1827,7 +1827,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                                 let window_project_groups = self.window_project_groups.clone();
                                 let selected_index = self.selected_index;
                                 let filtered_entries = self.filtered_entries.clone();
-                                Button::new("move_to_new_window", "New Window")
+                                Button::new("move_to_new_window", i18n::tr("New Window"))
                                     .key_binding(KeyBinding::for_action_in(
                                         &menu::SecondaryConfirm,
                                         &focus_handle,
@@ -1847,7 +1847,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                             })
                         })
                         .child(
-                            Button::new("activate", "Activate")
+                            Button::new("activate", i18n::tr("Activate"))
                                 .key_binding(KeyBinding::for_action_in(
                                     &menu::Confirm,
                                     &focus_handle,
@@ -1859,7 +1859,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                         )
                     } else if self.create_new_window {
                         this.child(
-                            Button::new("open_here", "This Window")
+                            Button::new("open_here", i18n::tr("This Window"))
                                 .key_binding(KeyBinding::for_action_in(
                                     &menu::SecondaryConfirm,
                                     &focus_handle,
@@ -1870,7 +1870,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                                 }),
                         )
                         .child(
-                            Button::new("open_new_window", "Open")
+                            Button::new("open_new_window", i18n::tr("Open"))
                                 .key_binding(KeyBinding::for_action_in(
                                     &menu::Confirm,
                                     &focus_handle,
@@ -1882,7 +1882,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                         )
                     } else {
                         this.child(
-                            Button::new("open_new_window", "New Window")
+                            Button::new("open_new_window", i18n::tr("New Window"))
                                 .key_binding(KeyBinding::for_action_in(
                                     &menu::SecondaryConfirm,
                                     &focus_handle,
@@ -1893,7 +1893,7 @@ impl PickerDelegate for RecentProjectsDelegate {
                                 }),
                         )
                         .child(
-                            Button::new("open_here", "Open")
+                            Button::new("open_here", i18n::tr("Open"))
                                 .key_binding(KeyBinding::for_action_in(
                                     &menu::Confirm,
                                     &focus_handle,

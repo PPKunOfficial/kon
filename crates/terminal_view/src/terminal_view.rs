@@ -599,35 +599,41 @@ impl TerminalView {
         let context_menu = ContextMenu::build(window, cx, |menu, _, _| {
             menu.context(self.focus_handle.clone())
                 .when(self.shows_workspace_actions(), |menu| {
-                    menu.action("New Terminal", Box::new(NewTerminal::default()))
+                    menu.action(i18n::tr("New Terminal"), Box::new(NewTerminal::default()))
                         .action(
-                            "New Center Terminal",
+                            i18n::tr("New Center Terminal"),
                             Box::new(NewCenterTerminal::default()),
                         )
                         .separator()
                 })
-                .action("Copy", Box::new(Copy))
+                .action(i18n::tr("Copy"), Box::new(Copy))
                 .when(
                     !self.read_only && !matches!(self.mode, TerminalMode::Embedded { .. }),
                     |menu| {
-                        menu.action("Paste", Box::new(Paste))
-                            .action("Paste Text", Box::new(PasteText))
+                        menu.action(i18n::tr("Paste"), Box::new(Paste))
+                            .action(i18n::tr("Paste Text"), Box::new(PasteText))
                     },
                 )
-                .action("Select All", Box::new(SelectAll))
+                .action(i18n::tr("Select All"), Box::new(SelectAll))
                 .when(
                     !self.read_only && !matches!(self.mode, TerminalMode::Embedded { .. }),
-                    |menu| menu.action("Clear", Box::new(Clear)),
+                    |menu| menu.action(i18n::tr("Clear"), Box::new(Clear)),
                 )
                 .when(
                     assistant_enabled && !matches!(self.mode, TerminalMode::Embedded { .. }),
                     |menu| {
                         menu.separator()
                             .when(!self.read_only, |menu| {
-                                menu.action("Inline Assist", Box::new(InlineAssist::default()))
+                                menu.action(
+                                    i18n::tr("Inline Assist"),
+                                    Box::new(InlineAssist::default()),
+                                )
                             })
                             .when(has_selection && self.shows_workspace_actions(), |menu| {
-                                menu.action("Add to Agent Thread", Box::new(AddSelectionToThread))
+                                menu.action(
+                                    i18n::tr("Add to Agent Thread"),
+                                    Box::new(AddSelectionToThread),
+                                )
                             })
                     },
                 )

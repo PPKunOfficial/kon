@@ -4292,7 +4292,7 @@ impl ThreadView {
                 cx.notify();
             }))
             .child(
-                Button::new("review", "Review")
+                Button::new("review", i18n::tr("Review"))
                     .label_size(LabelSize::Small)
                     .on_click({
                         let buffer = buffer.clone();
@@ -4302,7 +4302,7 @@ impl ThreadView {
                     }),
             )
             .child(
-                Button::new(("reject-file", index), "Reject")
+                Button::new(("reject-file", index), i18n::tr("Reject"))
                     .label_size(LabelSize::Small)
                     .disabled(pending_edits)
                     .on_click({
@@ -4642,7 +4642,7 @@ impl ThreadView {
                         .border_b_1()
                         .border_color(cx.theme().colors().border)
                         .child(
-                            Label::new("Subagents Awaiting Permission:")
+                            Label::new(i18n::tr("Subagents Awaiting Permission:"))
                                 .size(LabelSize::Small)
                                 .color(Color::Muted),
                         )
@@ -4686,7 +4686,7 @@ impl ThreadView {
                                 )
                                 .child(
                                     div().visible_on_hover(&group).child(
-                                        Label::new("Scroll to Subagent")
+                                        Label::new(i18n::tr("Scroll to Subagent"))
                                             .size(LabelSize::Small)
                                             .color(Color::Muted)
                                             .truncate(),
@@ -4836,7 +4836,7 @@ impl ThreadView {
                     })),
             )
             .child(
-                Button::new("clear_queue", "Clear All")
+                Button::new("clear_queue", i18n::tr("Clear All"))
                     .label_size(LabelSize::Small)
                     .key_binding(
                         KeyBinding::for_action(&ClearMessageQueue, cx)
@@ -4876,7 +4876,7 @@ impl ThreadView {
                     .min_w_0()
                     .gap_1()
                     .child(
-                        Label::new("Plan")
+                        Label::new(i18n::tr("Plan"))
                             .size(LabelSize::Small)
                             .color(Color::Muted),
                     )
@@ -4894,7 +4894,7 @@ impl ThreadView {
                 .min_w_0()
                 .gap_1()
                 .child(
-                    Label::new("Plan")
+                    Label::new(i18n::tr("Plan"))
                         .size(LabelSize::Small)
                         .color(Color::Muted),
                 )
@@ -4927,7 +4927,7 @@ impl ThreadView {
                 IconButton::new("dismiss-plan", IconName::Close)
                     .icon_size(IconSize::XSmall)
                     .shape(ui::IconButtonShape::Square)
-                    .tooltip(Tooltip::text("Clear Plan"))
+                    .tooltip(Tooltip::text(i18n::tr("Clear Plan")))
                     .on_click(cx.listener(|this, _, _, cx| {
                         this.thread.update(cx, |thread, cx| thread.clear_plan(cx));
                         cx.stop_propagation();
@@ -4958,7 +4958,7 @@ impl ThreadView {
                 .gap_1()
                 .truncate()
                 .child(
-                    Label::new("Current:")
+                    Label::new(i18n::tr("Current:"))
                         .size(LabelSize::Small)
                         .color(Color::Muted),
                 )
@@ -5002,7 +5002,7 @@ impl ThreadView {
                 .gap_1()
                 .justify_between()
                 .child(
-                    Label::new("Plan")
+                    Label::new(i18n::tr("Plan"))
                         .size(LabelSize::Small)
                         .color(Color::Muted),
                 )
@@ -5335,7 +5335,7 @@ impl ThreadView {
                             };
 
                             this.child(
-                                Label::new("Edits")
+                                Label::new(i18n::tr("Edits"))
                                     .size(LabelSize::Small)
                                     .color(Color::Muted),
                             )
@@ -5518,7 +5518,7 @@ impl ThreadView {
                                                 IconButton::new("stop_subagent", IconName::Stop)
                                                     .icon_size(IconSize::Small)
                                                     .icon_color(Color::Error)
-                                                    .tooltip(Tooltip::text("Stop Subagent"))
+                                                    .tooltip(Tooltip::text(i18n::tr("Stop Subagent")))
                                                     .on_click(cx.listener(
                                                         move |this, _, _, cx| {
                                                             this.cancel_thread(&thread, cx)
@@ -5531,7 +5531,7 @@ impl ThreadView {
                                 .child(
                                     IconButton::new("minimize_subagent", IconName::Dash)
                                         .icon_size(IconSize::Small)
-                                        .tooltip(Tooltip::text("Minimize Subagent"))
+                                        .tooltip(Tooltip::text(i18n::tr("Minimize Subagent")))
                                         .on_click(move |_, window, cx| {
                                             let _ = server_view.update(cx, |server_view, cx| {
                                                 server_view.navigate_to_thread(
@@ -5913,13 +5913,13 @@ impl ThreadView {
                                         move |_window, cx| {
                                             if is_next {
                                                 Tooltip::for_action_in(
-                                                    "Edit",
+                                                    i18n::tr("Edit"),
                                                     &EditFirstQueuedMessage,
                                                     &focus_handle,
                                                     cx,
                                                 )
                                             } else {
-                                                Tooltip::simple("Edit", cx)
+                                                Tooltip::simple(i18n::tr("Edit"), cx)
                                             }
                                         }
                                     })
@@ -6581,7 +6581,7 @@ impl ThreadView {
                     h_flex()
                         .gap_2()
                         .justify_between()
-                        .child(Label::new("Change Thinking Effort"))
+                            .child(Label::new(i18n::tr("Change Thinking Effort")))
                         .child(KeyBinding::for_action_in(
                             &ToggleThinkingEffortMenu,
                             &focus_handle,
@@ -6597,7 +6597,7 @@ impl ThreadView {
                             .justify_between()
                             .border_t_1()
                             .border_color(cx.theme().colors().border_variant)
-                            .child(Label::new("Cycle Thinking Effort"))
+                            .child(Label::new(i18n::tr("Cycle Thinking Effort")))
                             .child(KeyBinding::for_action_in(
                                 &CycleThinkingEffort,
                                 &focus_handle,
@@ -6718,7 +6718,7 @@ impl ThreadView {
             div()
                 .id("loading-message-content")
                 .px_1()
-                .tooltip(Tooltip::text("Loading Added Context…"))
+                .tooltip(Tooltip::text(i18n::tr("Loading Added Context…")))
                 .child(loading_contents_spinner(IconSize::default()))
                 .into_any_element()
         } else if (is_generating || is_unconfirmed) && is_editor_empty {
@@ -6766,7 +6766,7 @@ impl ThreadView {
                                     h_flex()
                                         .gap_2()
                                         .justify_between()
-                                        .child(Label::new("Queue and Send"))
+                                        .child(Label::new(i18n::tr("Queue and Send")))
                                         .child(KeyBinding::for_action_in(&Chat, &focus_handle, cx)),
                                 )
                                 .child(
@@ -6776,7 +6776,7 @@ impl ThreadView {
                                         .justify_between()
                                         .border_t_1()
                                         .border_color(cx.theme().colors().border_variant)
-                                        .child(Label::new("Send Immediately"))
+                                        .child(Label::new(i18n::tr("Send Immediately")))
                                         .child(KeyBinding::for_action_in(
                                             &SendImmediately,
                                             &focus_handle,
@@ -7067,7 +7067,7 @@ impl Render for TokenUsageTooltip {
             container
                 .min_w_40()
                 .child(
-                    Label::new("Context")
+                    Label::new(i18n::tr("Context"))
                         .color(Color::Muted)
                         .size(LabelSize::Small),
                 )
@@ -7089,7 +7089,7 @@ impl Render for TokenUsageTooltip {
                             .child(
                                 h_flex()
                                     .gap_0p5()
-                                    .child(Label::new("Input:").color(Color::Muted).mr_0p5())
+                                    .child(Label::new(i18n::tr("Input:")).color(Color::Muted).mr_0p5())
                                     .child(Label::new(input_tokens))
                                     .child(Label::new("/").color(separator_color))
                                     .child(Label::new(input_max).color(Color::Muted)),
@@ -7097,7 +7097,7 @@ impl Render for TokenUsageTooltip {
                             .child(
                                 h_flex()
                                     .gap_0p5()
-                                    .child(Label::new("Output:").color(Color::Muted).mr_0p5())
+                                    .child(Label::new(i18n::tr("Output:")).color(Color::Muted).mr_0p5())
                                     .child(Label::new(output_tokens))
                                     .child(Label::new("/").color(separator_color))
                                     .child(Label::new(output_max).color(Color::Muted)),
@@ -7113,7 +7113,7 @@ impl Render for TokenUsageTooltip {
                             .border_t_1()
                             .border_color(cx.theme().colors().border_variant)
                             .child(
-                                Label::new("Cost")
+                                Label::new(i18n::tr("Cost"))
                                     .color(Color::Muted)
                                     .size(LabelSize::Small),
                             )
@@ -7132,7 +7132,7 @@ impl Render for TokenUsageTooltip {
                                 .border_t_1()
                                 .border_color(cx.theme().colors().border_variant)
                                 .child(
-                                    Label::new("Rules")
+                                    Label::new(i18n::tr("Rules"))
                                         .color(Color::Muted)
                                         .size(LabelSize::Small),
                                 )
@@ -7573,7 +7573,7 @@ impl ThreadView {
                                                 if is_loading_contents {
                                                     div()
                                                         .id("loading-edited-message-content")
-                                                        .tooltip(Tooltip::text("Loading Added Context…"))
+                                                        .tooltip(Tooltip::text(i18n::tr("Loading Added Context…")))
                                                         .child(loading_contents_spinner(IconSize::XSmall))
                                                         .into_any_element()
                                                 } else {
@@ -7607,7 +7607,7 @@ impl ThreadView {
                                                     move |_, _| {
                                                         v_flex()
                                                             .gap_1()
-                                                            .child(Label::new("Unavailable Editing"))
+                                                            .child(Label::new(i18n::tr("Unavailable Editing")))
                                                             .child(
                                                                 div().max_w_64().child(
                                                                     Label::new(if source_is_representable {
@@ -7805,13 +7805,13 @@ impl ThreadView {
                                         .size(IconSize::Small),
                                 )
                                 .child(
-                                    Label::new("Subagent Output")
+                                    Label::new(i18n::tr("Subagent Output"))
                                         .size(LabelSize::Custom(self.tool_name_font_size()))
                                         .color(Color::Muted),
                                 ),
                         )
                         .child(Divider::horizontal())
-                        .tooltip(Tooltip::text("Everything below this line was sent as output from this subagent to the main agent.")),
+                        .tooltip(Tooltip::text(i18n::tr("Everything below this line was sent as output from this subagent to the main agent."))),
                 )
                 .child(primary)
                 .into_any_element()
@@ -8138,7 +8138,7 @@ impl ThreadView {
         )
         .icon_size(IconSize::Small)
         .icon_color(Color::Muted)
-        .tooltip(Tooltip::text("Scroll to User Message"))
+        .tooltip(Tooltip::text(i18n::tr("Scroll to User Message")))
         .on_click(cx.listener(move |this, _, _, cx| {
             this.scroll_to_user_message_index(user_message_index, cx);
         }));
@@ -8147,7 +8147,7 @@ impl ThreadView {
             IconButton::new(("scroll_to_top", entry_ix), IconName::ArrowUp)
                 .icon_size(IconSize::Small)
                 .icon_color(Color::Muted)
-                .tooltip(Tooltip::text("Scroll to Top"))
+                .tooltip(Tooltip::text(i18n::tr("Scroll to Top")))
                 .on_click(cx.listener(move |this, _, _, cx| {
                     this.scroll_to_top(cx);
                 }))
@@ -8199,7 +8199,7 @@ impl ThreadView {
                                 })
                                 .tooltip(move |window, cx| match feedback {
                                     Some(ThreadFeedback::Positive) => {
-                                        Tooltip::text("Thanks for your feedback!")(window, cx)
+                                        Tooltip::text(i18n::tr("Thanks for your feedback!"))(window, cx)
                                     }
                                     _ => Tooltip::with_meta(
                                         "Helpful Response",
@@ -8704,7 +8704,7 @@ impl ThreadView {
                     )
                     .child(
                         div().min_w(rems(8.)).child(
-                            LoadingLabel::new("Awaiting Confirmation")
+                            LoadingLabel::new(i18n::tr("Awaiting Confirmation"))
                                 .size(LabelSize::Small)
                                 .color(Color::Muted)
                                 .single_line(),
@@ -8865,7 +8865,7 @@ impl ThreadView {
                                 div()
                                     .text_size(self.tool_name_font_size())
                                     .text_color(cx.theme().colors().text_muted)
-                                    .child("Thinking"),
+                                    .child(i18n::tr("Thinking")),
                             ),
                     )
                     .child(
@@ -9160,7 +9160,7 @@ impl ThreadView {
                     .child(
                         Button::new(("session-message-participant", entry_ix), label)
                             .label_size(LabelSize::Small)
-                            .tooltip(Tooltip::text("Open Session"))
+                            .tooltip(Tooltip::text(i18n::tr("Open Session")))
                             .on_click(cx.listener({
                                 let session_id = session_id.clone();
                                 move |this, _, window, cx| {
@@ -9175,7 +9175,7 @@ impl ThreadView {
                     )
                     .into_any_element(),
                 // The RFD allows messages naming a session this conversation never learned about.
-                None => Label::new("Unavailable Session")
+                None => Label::new(i18n::tr("Unavailable Session"))
                     .size(LabelSize::Small)
                     .color(Color::Muted)
                     .into_any_element(),
@@ -9326,7 +9326,7 @@ impl ThreadView {
         let run_command_label = if is_preview {
             Some(
                 h_flex().h_6().child(
-                    Label::new("Run Command")
+                    Label::new(i18n::tr("Run Command"))
                         .buffer_font(cx)
                         .size(LabelSize::XSmall)
                         .color(Color::Muted),
@@ -10182,7 +10182,7 @@ impl ThreadView {
                                                 div()
                                                     .id(("paused-tool-call", entry_ix))
                                                     .pr_0p5()
-                                                    .tooltip(Tooltip::text("Paused"))
+                                                    .tooltip(Tooltip::text(i18n::tr("Paused")))
                                                     .child(
                                                         Icon::new(IconName::DebugPause)
                                                             .color(Color::Muted)
@@ -10200,7 +10200,7 @@ impl ThreadView {
                                             )
                                             .icon_size(IconSize::Small)
                                             .icon_color(Color::Error)
-                                            .tooltip(Tooltip::text("Stop Tool Call"))
+                                            .tooltip(Tooltip::text(i18n::tr("Stop Tool Call")))
                                             .on_click(cx.listener(
                                                 move |this, _, _window, cx| {
                                                     this.cancel_tool_call(
@@ -10390,7 +10390,7 @@ impl ThreadView {
                             h_flex()
                                 .gap_1()
                                 .child(
-                                    Label::new("Network access")
+                                    Label::new(i18n::tr("Network access"))
                                         .size(LabelSize::Small)
                                         .color(Color::Muted),
                                 )
@@ -10488,7 +10488,7 @@ impl ThreadView {
                             h_flex()
                                 .gap_1()
                                 .child(
-                                    Label::new("Write Access")
+                                    Label::new(i18n::tr("Write Access"))
                                         .size(LabelSize::Small)
                                         .color(Color::Muted),
                                 )
@@ -10534,7 +10534,7 @@ impl ThreadView {
                         .size(IconSize::Small),
                 )
                 .child(
-                    Label::new("Runs without the OS sandbox")
+                    Label::new(i18n::tr("Runs without the OS sandbox"))
                         .size(LabelSize::Small)
                         .color(Color::Muted),
                 )
@@ -10546,7 +10546,7 @@ impl ThreadView {
                 .py_1()
                 .gap_0p5()
                 .child(
-                    Label::new("Reason")
+                    Label::new(i18n::tr("Reason"))
                         .size(LabelSize::XSmall)
                         .color(Color::Muted),
                 )
@@ -10718,7 +10718,7 @@ impl ThreadView {
                         IconButton::new("configure-confusable-warning", IconName::Settings)
                             .icon_size(IconSize::Small)
                             .icon_color(Color::Muted)
-                            .tooltip(Tooltip::text("Configure unicode confusables warning"))
+                            .tooltip(Tooltip::text(i18n::tr("Configure unicode confusables warning")))
                             .on_click(|_, window, cx| {
                                 window.dispatch_action(
                                     Box::new(zed_actions::OpenSettingsAt {
@@ -10739,7 +10739,7 @@ impl ThreadView {
                         ToggleState::Unselected
                     },
                 )
-                .label("I understand and wish to proceed")
+                .label(i18n::tr("I understand and wish to proceed"))
                 .label_size(LabelSize::Small)
                 .on_click(cx.listener({
                     let tool_call_id = tool_call_id.clone();
@@ -10796,7 +10796,7 @@ impl ThreadView {
                             .flex_1()
                             .gap_0p5()
                             .child(
-                                Label::new("This command can write to a file on a Windows drive")
+                                Label::new(i18n::tr("This command can write to a file on a Windows drive"))
                                     .size(LabelSize::Small)
                                     .color(Color::Warning),
                             )
@@ -10818,7 +10818,7 @@ impl ThreadView {
                         IconButton::new("configure-ntfs-warning", IconName::Settings)
                             .icon_size(IconSize::Small)
                             .icon_color(Color::Muted)
-                            .tooltip(Tooltip::text("Configure Windows-drive warning"))
+                            .tooltip(Tooltip::text(i18n::tr("Configure Windows-drive warning")))
                             .on_click(|_, window, cx| {
                                 window.dispatch_action(
                                     Box::new(zed_actions::OpenSettingsAt {
@@ -10839,7 +10839,7 @@ impl ThreadView {
                         ToggleState::Selected
                     },
                 )
-                .label("Don't show this warning again")
+                .label(i18n::tr("Don't show this warning again"))
                 .label_size(LabelSize::Small)
                 .on_click(cx.listener(|this, state: &ToggleState, _window, cx| {
                     let disable = *state == ToggleState::Selected;
@@ -10886,7 +10886,7 @@ impl ThreadView {
                     .min_w_0()
                     .gap_0p5()
                     .child(
-                        Label::new("Couldn't create a sandbox")
+                        Label::new(i18n::tr("Couldn't create a sandbox"))
                             .size(LabelSize::Small)
                             .color(Color::Muted),
                     )
@@ -11099,7 +11099,7 @@ impl ThreadView {
                 h_flex()
                     .gap_0p5()
                     .child(
-                        Button::new(("allow-btn", entry_ix), "Allow")
+                        Button::new(("allow-btn", entry_ix), i18n::tr("Allow"))
                             .disabled(allow_disabled)
                             .start_icon(
                                 Icon::new(IconName::Check)
@@ -11131,7 +11131,7 @@ impl ThreadView {
                             })),
                     )
                     .child(
-                        Button::new(("deny-btn", entry_ix), "Deny")
+                        Button::new(("deny-btn", entry_ix), i18n::tr("Deny"))
                             .start_icon(
                                 Icon::new(IconName::Close)
                                     .size(IconSize::XSmall)
@@ -11732,7 +11732,7 @@ impl ThreadView {
                             cx,
                         ),
                     )
-                    .tooltip(Tooltip::text("Go to File"))
+                    .tooltip(Tooltip::text(i18n::tr("Go to File")))
                     .on_click(cx.listener(move |this, _, window, cx| {
                         this.open_tool_call_location(entry_ix, 0, window, cx);
                     }))
@@ -11876,7 +11876,7 @@ impl ThreadView {
                             )
                             .when(file.hunks.is_empty(), |this| {
                                 this.child(
-                                    Label::new("No text preview available")
+                                    Label::new(i18n::tr("No text preview available"))
                                         .size(LabelSize::XSmall)
                                         .color(Color::Muted),
                                 )
@@ -11903,7 +11903,7 @@ impl ThreadView {
                         render.files.is_empty() && render.fallback.is_none(),
                         |this| {
                             this.p_2().child(
-                                Label::new("No text preview available")
+                                Label::new(i18n::tr("No text preview available"))
                                     .size(LabelSize::XSmall)
                                     .color(Color::Muted),
                             )
@@ -12356,7 +12356,7 @@ impl ThreadView {
                         .child(Icon::new(IconName::Circle).size(IconSize::Small).color(
                             Color::Custom(cx.theme().colors().icon_disabled.opacity(0.5)),
                         ))
-                        .tooltip(Tooltip::text("Subagent Cancelled"))
+                        .tooltip(Tooltip::text(i18n::tr("Subagent Cancelled")))
                         .into_any_element()
                 }
                 SubagentStatus::Failed => div()
@@ -12366,7 +12366,7 @@ impl ThreadView {
                             .size(IconSize::Small)
                             .color(Color::Error),
                     )
-                    .tooltip(Tooltip::text("Subagent Failed"))
+                    .tooltip(Tooltip::text(i18n::tr("Subagent Failed")))
                     .into_any_element(),
                 SubagentStatus::Completed => Icon::new(IconName::Check)
                     .size(IconSize::Small)
@@ -12379,7 +12379,7 @@ impl ThreadView {
                             .size(IconSize::Small)
                             .color(Color::Muted),
                     )
-                    .tooltip(Tooltip::text("Subagent Status Unknown"))
+                    .tooltip(Tooltip::text(i18n::tr("Subagent Status Unknown")))
                     .into_any_element(),
             });
 
@@ -12534,7 +12534,7 @@ impl ThreadView {
                                     )
                                     .icon_size(IconSize::Small)
                                     .icon_color(Color::Error)
-                                    .tooltip(Tooltip::text("Stop Subagent"))
+                                    .tooltip(Tooltip::text(i18n::tr("Stop Subagent")))
                                     .when_some(
                                         thread_view
                                             .as_ref()
@@ -12580,7 +12580,7 @@ impl ThreadView {
                             .color(Color::Muted)
                             .size(IconSize::Small),
                     )
-                    .tooltip(Tooltip::text("Make Subagent Full Screen"))
+                    .tooltip(Tooltip::text(i18n::tr("Make Subagent Full Screen")))
                     .on_click(cx.listener(move |this, _event, window, cx| {
                         telemetry::event!("Subagent Maximized");
                         this.server_view
@@ -13064,7 +13064,7 @@ impl ThreadView {
     }
 
     fn retry_button(&self, cx: &mut Context<Self>) -> impl IntoElement {
-        Button::new("retry", "Retry")
+        Button::new("retry", i18n::tr("Retry"))
             .label_size(LabelSize::Small)
             .style(ButtonStyle::Filled)
             .on_click(cx.listener(|this, _, _, cx| {
@@ -13073,7 +13073,7 @@ impl ThreadView {
     }
 
     fn new_thread_button(&self, cx: &mut Context<Self>) -> impl IntoElement {
-        Button::new("new_thread", "New Thread")
+        Button::new("new_thread", i18n::tr("New Thread"))
             .label_size(LabelSize::Small)
             .style(ButtonStyle::Filled)
             .on_click(cx.listener(|this, _, window, cx| {
@@ -13083,7 +13083,7 @@ impl ThreadView {
     }
 
     fn upgrade_button(&self, cx: &mut Context<Self>) -> impl IntoElement {
-        Button::new("upgrade", "Upgrade")
+        Button::new("upgrade", i18n::tr("Upgrade"))
             .label_size(LabelSize::Small)
             .style(ButtonStyle::Tinted(ui::TintColor::Accent))
             .on_click(cx.listener({
@@ -13744,7 +13744,7 @@ impl ThreadView {
                         )
                     })
                     .child(
-                        Button::new("accept-data-retention", "Accept")
+                        Button::new("accept-data-retention", i18n::tr("Accept"))
                             .label_size(LabelSize::Small)
                             .style(ButtonStyle::Tinted(TintColor::Warning))
                             .on_click(cx.listener(|this, _, _, cx| {

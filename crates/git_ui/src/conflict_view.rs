@@ -384,7 +384,7 @@ fn render_conflict_buttons(
                 }),
         )
         .child(
-            Button::new("both", "Use Both")
+            Button::new("both", i18n::tr("Use Both"))
                 .label_size(LabelSize::Small)
                 .on_click({
                     let editor = editor.clone();

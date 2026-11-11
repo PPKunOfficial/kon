@@ -896,7 +896,7 @@ fn open_settings_editor_with(
         cx.open_window(
             WindowOptions {
                 titlebar: Some(TitlebarOptions {
-                    title: Some("Kon — Settings".into()),
+                    title: Some(i18n::tr("Kon — Settings").into()),
                     appears_transparent: true,
                     traffic_light_position: Some(point(px(12.0), px(12.0))),
                 }),
@@ -1577,8 +1577,8 @@ fn render_settings_item_link(
                 .icon_color(link_icon_color)
                 .icon_size(IconSize::Small)
                 .shape(IconButtonShape::Square)
-                .aria_label("Copy Link")
-                .tooltip(Tooltip::text("Copy Link"))
+                .aria_label(i18n::tr("Copy Link"))
+                .tooltip(Tooltip::text(i18n::tr("Copy Link")))
                 .when_some(json_path, |this, path| {
                     this.on_click(cx.listener(move |this, _, _, cx| {
                         let link = format!("kon://settings/{}", path);
@@ -1737,9 +1737,9 @@ enum SettingsUiFile {
 impl SettingsUiFile {
     fn setting_type(&self) -> &'static str {
         match self {
-            SettingsUiFile::User => "User",
-            SettingsUiFile::Project(_) => "Project",
-            SettingsUiFile::Server(_) => "Server",
+            SettingsUiFile::User => i18n::tr("User"),
+            SettingsUiFile::Project(_) => i18n::tr("Project"),
+            SettingsUiFile::Server(_) => i18n::tr("Server"),
         }
     }
 
@@ -2892,7 +2892,7 @@ impl SettingsWindow {
         h_flex()
             .id("settings-ui-files-header")
             .role(Role::Group)
-            .aria_label("Settings File")
+            .aria_label(i18n::tr("Settings File"))
             .w_full()
             .gap_1()
             .justify_between()
@@ -2957,7 +2957,9 @@ impl SettingsWindow {
                                         }),
                                     )
                                     .style(DropdownStyle::Subtle)
-                                    .trigger_tooltip(Tooltip::text("View Other Projects"))
+                                    .trigger_tooltip(Tooltip::text(i18n::tr(
+                                        "View Other Projects",
+                                    )))
                                     .trigger_icon(IconName::ChevronDown)
                                     .attach(gpui::Anchor::BottomLeft)
                                     .offset(gpui::Point {
@@ -2986,7 +2988,7 @@ impl SettingsWindow {
 
     pub(crate) fn display_name(&self, file: &SettingsUiFile) -> Option<String> {
         match file {
-            SettingsUiFile::User => Some("User".to_string()),
+            SettingsUiFile::User => Some(i18n::tr("User").to_string()),
             SettingsUiFile::Project((worktree_id, path)) => self
                 .worktree_root_dirs
                 .get(&worktree_id)
@@ -3042,7 +3044,7 @@ impl SettingsWindow {
         h_flex()
             .id("settings-ui-search")
             .role(Role::SearchInput)
-            .aria_label("Search Settings")
+            .aria_label(i18n::tr("Search Settings"))
             .aria_value(a11y_value)
             .track_focus(&self.search_bar.focus_handle(cx))
             .a11y_synthetic_children(a11y_text_runs)
@@ -3063,7 +3065,7 @@ impl SettingsWindow {
                     IconButton::new("clear-btn", IconName::Close)
                         .icon_color(Color::Muted)
                         .icon_size(IconSize::Small)
-                        .tooltip(Tooltip::text("Clear"))
+                        .tooltip(Tooltip::text(i18n::tr("Clear")))
                         .on_click(cx.listener(|settings_window, _, window, cx| {
                             settings_window.clear_search(window, cx);
                         })),
@@ -3087,9 +3089,9 @@ impl SettingsWindow {
                 .visible_navbar_entries()
                 .any(|(_, entry)| entry.focus_handle.is_focused(window))
         {
-            "Focus Content"
+            i18n::tr("Focus Content")
         } else {
-            "Focus Navbar"
+            i18n::tr("Focus Navbar")
         };
 
         let mut key_context = KeyContext::new_with_defaults(cx.platform_info().os);
@@ -3230,7 +3232,7 @@ impl SettingsWindow {
                 v_flex()
                     .id("settings-ui-nav")
                     .role(Role::Tree)
-                    .aria_label("Settings Navigation")
+                    .aria_label(i18n::tr("Settings Navigation"))
                     .flex_1()
                     .overflow_hidden()
                     .track_focus(&self.navbar_focus_handle.focus_handle(cx))
@@ -3510,7 +3512,7 @@ impl SettingsWindow {
                 "sub-page-scope-picker",
                 scope_name,
                 ContextMenu::build(window, cx, move |mut menu, _, _| {
-                    menu = menu.header("Scope");
+                    menu = menu.header(i18n::tr("Scope"));
 
                     for ix in allowed_file_indices {
                         let (file, focus_handle) = &self.files[ix];
@@ -3540,7 +3542,7 @@ impl SettingsWindow {
                 }),
             )
             .style(DropdownStyle::Subtle)
-            .trigger_tooltip(Tooltip::text("Change Scope"))
+            .trigger_tooltip(Tooltip::text(i18n::tr("Change Scope")))
             .attach(gpui::Anchor::BottomLeft)
             .offset(gpui::Point {
                 x: px(0.0),
@@ -3562,7 +3564,7 @@ impl SettingsWindow {
             .child(Label::new("/").color(Color::Muted))
             .children(
                 itertools::intersperse(
-                    std::iter::once(self.current_page().title.into()).chain(
+                    std::iter::once(i18n::tr(self.current_page().title).into()).chain(
                         self.sub_page_stack
                             .iter()
                             .enumerate()
@@ -3587,11 +3589,14 @@ impl SettingsWindow {
             .items_center()
             .justify_center()
             .gap_1()
-            .child(Label::new("No Results"))
+            .child(Label::new(i18n::tr("No Results")))
             .child(
-                Label::new(format!("No settings match \"{}\"", search_query))
-                    .size(LabelSize::Small)
-                    .color(Color::Muted),
+                Label::new(
+                    i18n::tr("No settings match \"{}\"")
+                        .replace("{}", &search_query),
+                )
+                .size(LabelSize::Small)
+                .color(Color::Muted),
             )
     }
 
@@ -3899,7 +3904,7 @@ impl SettingsWindow {
                         })
                         .when(is_skills_page, |this| {
                             this.child(
-                                Button::new("open-skill-creator", "Create Skill")
+                                Button::new("open-skill-creator", i18n::tr("Create Skill"))
                                     .tab_index(0_isize)
                                     .style(ButtonStyle::OutlinedGhost)
                                     .on_click(cx.listener(|this, _, window, cx| {
@@ -3957,7 +3962,7 @@ impl SettingsWindow {
                     )
                     .action_slot(
                         div().pr_1().pb_1().child(
-                            Button::new("fix-in-json", "Fix in settings.json")
+                            Button::new("fix-in-json", i18n::tr("Fix in settings.json"))
                                 .tab_index(0_isize)
                                 .style(ButtonStyle::Tinted(ui::TintColor::Warning))
                                 .on_click(cx.listener(|this, _, window, cx| {
@@ -3974,7 +3979,9 @@ impl SettingsWindow {
                 .gap_2()
                 .when_some(parse_error, |this, err| {
                     this.child(banner(
-                        "Failed to load your settings. Some values may be incorrect and changes may be lost.",
+                        i18n::tr(
+                            "Failed to load your settings. Some values may be incorrect and changes may be lost.",
+                        ),
                         err,
                         &mut self.shown_errors,
                         cx,
@@ -3982,17 +3989,24 @@ impl SettingsWindow {
                 })
                 .map(|this| match &error.migration_status {
                     settings::MigrationStatus::Succeeded => this.child(banner(
-                        "Your settings are out of date, and need to be updated.",
+                        i18n::tr("Your settings are out of date, and need to be updated."),
                         match &self.current_file {
-                            SettingsUiFile::User => "They can be automatically migrated to the latest version.",
-                            SettingsUiFile::Server(_) | SettingsUiFile::Project(_)  => "They must be manually migrated to the latest version."
-                        }.to_string(),
+                            SettingsUiFile::User => i18n::tr(
+                                "They can be automatically migrated to the latest version.",
+                            ),
+                            SettingsUiFile::Server(_) | SettingsUiFile::Project(_) => i18n::tr(
+                                "They must be manually migrated to the latest version.",
+                            ),
+                        }
+                        .to_string(),
                         &mut self.shown_errors,
                         cx,
                     )),
                     settings::MigrationStatus::Failed { error: err } if !parse_failed => this
                         .child(banner(
-                            "Your settings file is out of date, automatic migration failed",
+                            i18n::tr(
+                                "Your settings file is out of date, automatic migration failed",
+                            ),
                             err.clone(),
                             &mut self.shown_errors,
                             cx,
@@ -4024,18 +4038,18 @@ impl SettingsWindow {
                         v_flex()
                             .my_0p5()
                             .gap_0p5()
-                            .child(Label::new("Restricted Mode"))
+                            .child(Label::new(i18n::tr("Restricted Mode")))
                             .child(
-                                Label::new(
+                                Label::new(i18n::tr(
                                     "This project is in restricted mode. Some project settings may not apply.",
-                                )
+                                ))
                                 .size(LabelSize::Small)
                                 .color(Color::Muted),
                             ),
                     )
                     .action_slot(
                         div().pr_2().pb_1().child(
-                            Button::new("manage-trust", "Manage Trust")
+                            Button::new("manage-trust", i18n::tr("Manage Trust"))
                                 .style(ButtonStyle::Tinted(ui::TintColor::Warning))
                                 .on_click(cx.listener(move |_this, _, window, cx| {
                                     if let Some(original_window) = original_window {
@@ -4462,7 +4476,7 @@ impl SettingsWindow {
         self.skill_creator_page = Some((page.clone(), subscription));
 
         let sub_page_link = SubPageLink {
-            title: "Create Skill".into(),
+            title: i18n::tr("Create Skill").into(),
             r#type: SubPageType::SkillCreator,
             description: None,
             search_aliases: &[],
@@ -4472,7 +4486,7 @@ impl SettingsWindow {
             render: pages::render_skill_creator_page,
         };
 
-        self.push_sub_page(sub_page_link, "Agent".into(), window, cx);
+        self.push_sub_page(sub_page_link, i18n::tr("Agent").into(), window, cx);
 
         let creating_from_url = !matches!(open_mode, pages::SkillCreatorOpenMode::Url { .. });
         page.update(cx, |page, cx| {

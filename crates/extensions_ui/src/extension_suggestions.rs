@@ -138,10 +138,10 @@ fn suggest_for_buffer(
                         .into_any_element()
                 })
                 .with_title(suggestion.title)
-                .more_info_message("Learn more")
+                .more_info_message(i18n::tr("Learn more"))
                 .more_info_url(suggestion.docs_url)
                 .primary_message(suggestion.install_message)
-                .secondary_message("Don't show again")
+                .secondary_message(i18n::tr("Don't show again"))
             });
         }
         None => {
@@ -163,13 +163,15 @@ fn suggest_for_buffer(
             };
             show_suggestion(workspace, &extension_id, cx, |cx| {
                 MessageNotification::new(
-                    format!(
-                        "Do you want to install the recommended '{extension_id}' extension for '{file_name_or_extension}' files?"
-                    ),
+                    i18n::tr(
+                        "Do you want to install the recommended '{}' extension for '{}' files?",
+                    )
+                    .replacen("{}", &extension_id, 1)
+                    .replacen("{}", &file_name_or_extension, 1),
                     cx,
                 )
-                .primary_message("Yes, install extension")
-                .secondary_message("No, don't install it")
+                .primary_message(i18n::tr("Yes, install extension"))
+                .secondary_message(i18n::tr("No, don't install it"))
             });
         }
     }
@@ -234,7 +236,7 @@ fn show_suggestion(
                 .secondary_icon(IconName::Close)
                 .secondary_icon_color(Color::Error)
                 .secondary_on_click(move |_window, cx| dismiss_suggestion(&extension_id, cx))
-                .secondary_menu_entry("Disable Suggestions", |_window, cx| {
+                .secondary_menu_entry(i18n::tr("Disable Suggestions"), |_window, cx| {
                     disable_extension_suggestions(cx)
                 })
         })

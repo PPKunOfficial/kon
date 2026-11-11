@@ -197,7 +197,11 @@ fn prompt<T>(
 where
     T: IntoEnumIterator + VariantNames + 'static,
 {
-    let rx = window.prompt(PromptLevel::Info, msg, detail, T::VARIANTS, cx);
+    let labels = T::VARIANTS
+        .iter()
+        .map(|variant| i18n::tr(*variant))
+        .collect::<Vec<_>>();
+    let rx = window.prompt(PromptLevel::Info, msg, detail, &labels, cx);
     cx.spawn(async move |_| Ok(T::iter().nth(rx.await?).unwrap()))
 }
 
@@ -225,9 +229,9 @@ enum StashKind {
 impl StashKind {
     fn title(self) -> &'static str {
         match self {
-            StashKind::All => "Stash All",
-            StashKind::Tracked => "Stash Tracked",
-            StashKind::Staged => "Stash Staged",
+            StashKind::All => i18n::tr("Stash All"),
+            StashKind::Tracked => i18n::tr("Stash Tracked"),
+            StashKind::Staged => i18n::tr("Stash Staged"),
         }
     }
 
@@ -364,17 +368,25 @@ fn git_panel_context_menu(
     ContextMenu::build(window, cx, |context_menu, _, _| {
         context_menu
             .context(focus_handle.clone())
-            .action_disabled_when(!has_unstaged_changes, "Stage All", StageAll.boxed_clone())
-            .action_disabled_when(!has_staged_changes, "Unstage All", UnstageAll.boxed_clone())
+            .action_disabled_when(
+                !has_unstaged_changes,
+                i18n::tr("Stage All"),
+                StageAll.boxed_clone(),
+            )
+            .action_disabled_when(
+                !has_staged_changes,
+                i18n::tr("Unstage All"),
+                UnstageAll.boxed_clone(),
+            )
             .action_disabled_when(
                 !has_staged_tracked_changes,
-                "Restore All Changes",
+                i18n::tr("Restore All Changes"),
                 RestoreTrackedFiles.boxed_clone(),
             )
             .separator()
             .action_disabled_when(
                 !(has_new_changes || has_tracked_changes),
-                "Stash All",
+                i18n::tr("Stash All"),
                 StashAll.boxed_clone(),
             )
             // Offer the stash variant that matches how the list is currently grouped,
@@ -382,34 +394,40 @@ fn git_panel_context_menu(
             .when(group_by == GitPanelGroupBy::Status, |context_menu| {
                 context_menu.action_disabled_when(
                     !has_tracked_changes,
-                    "Stash Tracked",
+                    i18n::tr("Stash Tracked"),
                     StashTracked.boxed_clone(),
                 )
             })
             .when(group_by == GitPanelGroupBy::Staging, |context_menu| {
                 context_menu.action_disabled_when(
                     !has_staged_changes,
-                    "Stash Staged",
+                    i18n::tr("Stash Staged"),
                     StashStaged.boxed_clone(),
                 )
             })
-            .action_disabled_when(!has_stash_items, "Stash Pop", StashPop.boxed_clone())
-            .action("View Stash", zed_actions::git::ViewStash.boxed_clone())
+            .action_disabled_when(!has_stash_items, i18n::tr("Stash Pop"), StashPop.boxed_clone())
+            .action(
+                i18n::tr("View Stash"),
+                zed_actions::git::ViewStash.boxed_clone(),
+            )
             .when(include_copy_paths, |context_menu| {
                 context_menu
                     .separator()
-                    .action("Copy Path", CopyPath.boxed_clone())
-                    .action("Copy Relative Path", CopyRelativePath.boxed_clone())
+                    .action(i18n::tr("Copy Path"), CopyPath.boxed_clone())
+                    .action(
+                        i18n::tr("Copy Relative Path"),
+                        CopyRelativePath.boxed_clone(),
+                    )
             })
             .separator()
             .action_disabled_when(
                 !has_staged_tracked_changes,
-                "Discard Tracked Changes",
+                i18n::tr("Discard Tracked Changes"),
                 RestoreTrackedFiles.boxed_clone(),
             )
             .action_disabled_when(
                 !has_untracked_files,
-                "Trash Untracked Files",
+                i18n::tr("Trash Untracked Files"),
                 TrashUntrackedFiles.boxed_clone(),
             )
     })
@@ -781,9 +799,9 @@ impl StageIntent {
 
     fn label(self, stage_status: impl FnOnce() -> StageStatus) -> &'static str {
         if self.resolve_with(stage_status) {
-            "Stage"
+            i18n::tr("Stage")
         } else {
-            "Unstage"
+            i18n::tr("Unstage")
         }
     }
 }
@@ -822,12 +840,12 @@ impl GitHeaderEntry {
     }
     pub fn title(&self) -> &'static str {
         match self.header {
-            Section::Conflict => "Conflicts",
-            Section::Tracked => "Tracked",
-            Section::New => "Untracked",
-            Section::Staged => "Staged",
-            Section::Unstaged => "Unstaged",
-            Section::Branch => "Branch Changes",
+            Section::Conflict => i18n::tr("Conflicts"),
+            Section::Tracked => i18n::tr("Tracked"),
+            Section::New => i18n::tr("Untracked"),
+            Section::Staged => i18n::tr("Staged"),
+            Section::Unstaged => i18n::tr("Unstaged"),
+            Section::Branch => i18n::tr("Branch Changes"),
         }
     }
 }
@@ -1249,23 +1267,35 @@ impl EntryMenuTitles {
     fn new(file_count: usize) -> Self {
         let plural = file_count > 1;
         Self {
-            copy_path: if plural { "Copy Paths" } else { "Copy Path" },
+            copy_path: if plural {
+                i18n::tr("Copy Paths")
+            } else {
+                i18n::tr("Copy Path")
+            },
             copy_relative_path: if plural {
-                "Copy Relative Paths"
+                i18n::tr("Copy Relative Paths")
             } else {
-                "Copy Relative Path"
+                i18n::tr("Copy Relative Path")
             },
-            open_diff: if plural { "Open Diffs" } else { "Open Diff" },
+            open_diff: if plural {
+                i18n::tr("Open Diffs")
+            } else {
+                i18n::tr("Open Diff")
+            },
             open_file_diff: if plural {
-                "Open File Diffs"
+                i18n::tr("Open File Diffs")
             } else {
-                "Open File Diff"
+                i18n::tr("Open File Diff")
             },
-            view_file: if plural { "View Files" } else { "View File" },
-            view_file_history: if plural {
-                "View File Histories"
+            view_file: if plural {
+                i18n::tr("View Files")
             } else {
-                "View File History"
+                i18n::tr("View File")
+            },
+            view_file_history: if plural {
+                i18n::tr("View File Histories")
+            } else {
+                i18n::tr("View File History")
             },
         }
     }
@@ -3299,9 +3329,9 @@ impl GitPanel {
                 .all(|target| target.scope == DiscardScope::Unstaged)
                 && tracked.iter().any(DiscardTarget::keeps_staged_changes)
             {
-                "unstaged changes"
+                i18n::tr("unstaged changes")
             } else {
-                "changes"
+                i18n::tr("changes")
             };
 
             let prompt = if skip_prompt {
@@ -3312,49 +3342,62 @@ impl GitPanel {
                     .map(|target| (&target.entry, false))
                     .or_else(|| untracked.first().map(|entry| (entry, true)))?;
 
+                let name = MarkdownInlineCode(
+                    entry
+                        .repo_path
+                        .file_name()
+                        .unwrap_or(entry.repo_path.display(path_style).as_ref()),
+                )
+                .to_string();
                 let (message, confirm_text) = if entry.status.is_deleted() {
                     (
-                        "Are you sure you want to restore ".to_string(),
-                        "Restore File",
+                        i18n::tr("Are you sure you want to restore {name}?")
+                            .replace("{name}", &name),
+                        i18n::tr("Restore File"),
                     )
                 } else if is_trashed {
-                    ("Trash ".to_string(), "Trash")
+                    (
+                        i18n::tr("Trash {name}?").replace("{name}", &name),
+                        i18n::tr("Trash"),
+                    )
                 } else {
                     (
-                        format!("Are you sure you want to discard {changes} to "),
-                        "Discard Changes",
+                        i18n::tr("Are you sure you want to discard {changes} to {name}?")
+                            .replace("{name}", &name)
+                            .replace("{changes}", changes),
+                        i18n::tr("Discard Changes"),
                     )
                 };
 
                 Some(window.prompt(
                     PromptLevel::Warning,
-                    &format!(
-                        "{}{}?",
-                        message,
-                        MarkdownInlineCode(
-                            entry
-                                .repo_path
-                                .file_name()
-                                .unwrap_or(entry.repo_path.display(path_style).as_ref())
-                        )
-                    ),
+                    &message,
                     None,
-                    &[confirm_text, "Cancel"],
+                    &[confirm_text, i18n::tr("Cancel")],
                     cx,
                 ))
             } else {
                 let (message, confirm_text) = match (tracked.len(), untracked.len()) {
                     (0, 0) => return Some(()),
                     (tracked_count, 0) => (
-                        format!("Discard {changes} to {tracked_count} files?"),
-                        "Discard",
+                        i18n::tr("Discard {changes} to {count} files?")
+                            .replace("{count}", &tracked_count.to_string())
+                            .replace("{changes}", changes),
+                        i18n::tr("Discard"),
                     ),
-                    (0, untracked_count) => (format!("Trash {untracked_count} files?"), "Trash"),
+                    (0, untracked_count) => (
+                        i18n::tr("Trash {count} files?")
+                            .replace("{count}", &untracked_count.to_string()),
+                        i18n::tr("Trash"),
+                    ),
                     (tracked_count, untracked_count) => (
-                        format!(
-                            "Discard {changes} to {tracked_count} files and trash {untracked_count} files?"
-                        ),
-                        "Discard and Trash",
+                        i18n::tr(
+                            "Discard {changes} to {count} files and trash {trashed} files?",
+                        )
+                        .replace("{count}", &tracked_count.to_string())
+                        .replace("{trashed}", &untracked_count.to_string())
+                        .replace("{changes}", changes),
+                        i18n::tr("Discard and Trash"),
                     ),
                 };
 
@@ -3362,7 +3405,7 @@ impl GitPanel {
                     PromptLevel::Warning,
                     &message,
                     None,
-                    &[confirm_text, "Cancel"],
+                    &[confirm_text, i18n::tr("Cancel")],
                     cx,
                 ))
             };
@@ -3549,7 +3592,7 @@ impl GitPanel {
             Cancel,
         }
         let prompt = prompt(
-            "Discard changes to these files?",
+            i18n::tr("Discard changes to these files?"),
             Some(&details),
             window,
             cx,
@@ -6804,7 +6847,7 @@ impl GitPanel {
             .trigger_with_tooltip(
                 IconButton::new("view-options-menu-trigger", IconName::Filter)
                     .icon_size(IconSize::Small),
-                Tooltip::text("View Options"),
+                Tooltip::text(i18n::tr("View Options")),
             )
             .menu(move |window, cx| {
                 Some(git_panel_view_options_menu(
@@ -6834,14 +6877,16 @@ impl GitPanel {
                             .icon_color(Color::Error)
                             .icon_size(IconSize::Small)
                             .style(ButtonStyle::Tinted(TintColor::Error))
-                            .tooltip(Tooltip::text("Cancel Commit Message Generation"))
+                            .tooltip(Tooltip::text(i18n::tr(
+                                "Cancel Commit Message Generation",
+                            )))
                             .on_click(cx.listener(|this, _event, _window, cx| {
                                 this.generate_commit_message_task.take();
                                 cx.notify();
                             })),
                     )
                     .child(
-                        Label::new("Generating Commit…")
+                        Label::new(i18n::tr("Generating Commit…"))
                             .size(LabelSize::Small)
                             .color(Color::Muted),
                     )
@@ -6876,10 +6921,10 @@ impl GitPanel {
         } else {
             button.tooltip(move |_window, cx| {
                 if !can_commit {
-                    Tooltip::simple("No Changes to Commit", cx)
+                    Tooltip::simple(i18n::tr("No Changes to Commit"), cx)
                 } else {
                     Tooltip::for_action_in(
-                        "Generate Commit Message",
+                        i18n::tr("Generate Commit Message"),
                         &git::GenerateCommitMessage,
                         &editor_focus_handle,
                         cx,
@@ -6964,7 +7009,7 @@ impl GitPanel {
                             })
                             .when(has_previous_commit, |this| {
                                 this.toggleable_entry(
-                                    "Amend",
+                                    i18n::tr("Amend"),
                                     amend,
                                     IconPosition::Start,
                                     Some(Box::new(Amend)),
@@ -6981,14 +7026,14 @@ impl GitPanel {
                                 )
                             })
                             .toggleable_entry(
-                                "Signoff",
+                                i18n::tr("Signoff"),
                                 signoff,
                                 IconPosition::Start,
                                 Some(Box::new(Signoff)),
                                 move |window, cx| window.dispatch_action(Box::new(Signoff), cx),
                             )
                             .item(
-                                ContextMenuEntry::new("Skip Hooks")
+                                ContextMenuEntry::new(i18n::tr("Skip Hooks"))
                                     .toggleable(IconPosition::Start, skip_hooks)
                                     .action(Box::new(SkipHooks))
                                     .handler(move |window, cx| {
@@ -7014,17 +7059,23 @@ impl GitPanel {
 
     pub fn configure_commit_button(&self, cx: &mut Context<Self>) -> (bool, &'static str) {
         if self.generate_commit_message_task.is_some() {
-            (false, "Generating commit message...")
+            (false, i18n::tr("Generating commit message..."))
         } else if self.has_unstaged_conflicts() {
-            (false, "You must resolve conflicts before committing")
+            (
+                false,
+                i18n::tr("You must resolve conflicts before committing"),
+            )
         } else if !self.has_staged_changes() && !self.has_tracked_changes() && !self.amend_pending {
-            (false, "No changes to commit")
+            (false, i18n::tr("No changes to commit"))
         } else if self.pending_commit.is_some() {
-            (false, "Commit in progress")
+            (false, i18n::tr("Commit in progress"))
         } else if !self.has_commit_message(cx) {
-            (false, "No commit message")
+            (false, i18n::tr("No commit message"))
         } else if !self.has_write_access(cx) {
-            (false, "You do not have write access to this project")
+            (
+                false,
+                i18n::tr("You do not have write access to this project"),
+            )
         } else {
             (true, self.commit_button_title())
         }
@@ -7033,16 +7084,16 @@ impl GitPanel {
     pub fn commit_button_title(&self) -> &'static str {
         if self.amend_pending {
             if self.has_staged_changes() {
-                "Amend"
+                i18n::tr("Amend")
             } else if self.has_tracked_changes() {
-                "Amend Tracked"
+                i18n::tr("Amend Tracked")
             } else {
-                "Amend"
+                i18n::tr("Amend")
             }
         } else if self.has_staged_changes() {
-            "Commit"
+            i18n::tr("Commit")
         } else {
-            "Commit Tracked"
+            i18n::tr("Commit Tracked")
         }
     }
 
@@ -7754,7 +7805,7 @@ impl GitPanel {
                     )
                 })
                 .tooltip(Tooltip::for_action_title_in(
-                    format!("Toggle {} Tab", label),
+                    i18n::tr("Toggle {} Tab").replace("{}", &label),
                     tooltip_action.as_ref(),
                     &focus_handle,
                 ))
@@ -7771,7 +7822,7 @@ impl GitPanel {
                 ElementId::Name("changes-tab".into()),
                 active_tab == GitPanelTab::Changes,
                 true,
-                "Changes".into(),
+                i18n::tr("Changes").into(),
                 GitPanelTab::Changes,
                 ActivateChangesTab.boxed_clone(),
             ))
@@ -7784,7 +7835,7 @@ impl GitPanel {
                 ElementId::Name("history-tab".into()),
                 active_tab != GitPanelTab::Changes,
                 false,
-                "History".into(),
+                i18n::tr("History").into(),
                 GitPanelTab::History,
                 ActivateHistoryTab.boxed_clone(),
             ))
@@ -7794,17 +7845,17 @@ impl GitPanel {
         v_flex().flex_1().size_full().overflow_hidden().map(|this| {
             let has_repo = self.active_repository.is_some();
             match &self.commit_history {
-                _ if !has_repo => {
-                    this.child(Self::render_history_placeholder("No repository found"))
-                }
+                _ if !has_repo => this.child(Self::render_history_placeholder(i18n::tr(
+                    "No repository found",
+                ))),
                 CommitHistory::Error(_) => this.child(Self::render_history_placeholder(
-                    "Failed to load commit history",
+                    i18n::tr("Failed to load commit history"),
                 )),
-                CommitHistory::Loading => {
-                    this.child(Self::render_history_placeholder("Loading Commit History…"))
-                }
+                CommitHistory::Loading => this.child(Self::render_history_placeholder(
+                    i18n::tr("Loading Commit History…"),
+                )),
                 CommitHistory::Loaded(entries) if entries.is_empty() => {
-                    this.child(Self::render_history_placeholder("No commits yet"))
+                    this.child(Self::render_history_placeholder(i18n::tr("No commits yet")))
                 }
                 CommitHistory::Loaded(_) => match self.render_commit_history(window, cx) {
                     Some(history) => this.child(history),
@@ -8448,10 +8499,10 @@ impl GitPanel {
         v_flex()
             .gap_1()
             .items_center()
-            .child(Label::new("No changes to commit").color(Color::Muted))
+            .child(Label::new(i18n::tr("No changes to commit")).color(Color::Muted))
             .when(show_branch_diff, |this| {
                 this.child(
-                    Button::new("view_branch_diff", "View Branch Diff")
+                    Button::new("view_branch_diff", i18n::tr("View Branch Diff"))
                         .label_size(LabelSize::Small)
                         .style(ButtonStyle::Outlined)
                         .on_click(cx.listener(|this, _, window, cx| {
@@ -8487,7 +8538,7 @@ impl GitPanel {
                         .flex_wrap()
                         .gap_1()
                         .child(
-                            Button::new("trust_directory", "Trust Directory")
+                            Button::new("trust_directory", i18n::tr("Trust Directory"))
                             .label_size(LabelSize::Small)
                             .layer(ElevationIndex::ModalSurface)
                             .style(ButtonStyle::Filled)
@@ -8501,7 +8552,7 @@ impl GitPanel {
                             )
                     )
                     .child(
-                        Button::new("learn_more", "Learn More")
+                        Button::new("learn_more", i18n::tr("Learn More"))
                             .label_size(LabelSize::Small)
                             .style(ButtonStyle::Outlined)
                             .end_icon(Icon::new(IconName::ArrowUpRight).size(IconSize::Small).color(Color::Muted))
@@ -8522,10 +8573,10 @@ impl GitPanel {
             v_flex()
                 .gap_1()
                 .items_center()
-                .child(Label::new("No Git Repositories").color(Color::Muted))
+                .child(Label::new(i18n::tr("No Git Repositories")).color(Color::Muted))
                 .when(has_directory_worktree, |this| {
                     this.child(
-                        Button::new("initialize_repository", "Initialize Repository")
+                        Button::new("initialize_repository", i18n::tr("Initialize Repository"))
                             .label_size(LabelSize::Small)
                             .style(ButtonStyle::Outlined)
                             .tooltip(Tooltip::for_action_title_in(
@@ -8869,11 +8920,11 @@ impl GitPanel {
                             .ok();
                     });
                 let tooltip_label = if all_conflicts_resolved {
-                    Some("All conflicts marked as resolved")
+                    Some(i18n::tr("All conflicts marked as resolved"))
                 } else {
                     match stage_intent {
-                        StageIntent::Stage => Some("Stage All"),
-                        StageIntent::Unstage => Some("Unstage All"),
+                        StageIntent::Stage => Some(i18n::tr("Stage All")),
+                        StageIntent::Unstage => Some(i18n::tr("Unstage All")),
                         StageIntent::Toggle => None,
                     }
                 };
@@ -8896,9 +8947,9 @@ impl GitPanel {
 
     fn render_empty_section(&self, section: Section) -> AnyElement {
         let message = match section {
-            Section::Staged => "No staged changes yet",
-            Section::Unstaged => "No unstaged changes",
-            _ => "No changes",
+            Section::Staged => i18n::tr("No staged changes yet"),
+            Section::Unstaged => i18n::tr("No unstaged changes"),
+            _ => i18n::tr("No changes"),
         };
         h_flex()
             .h(self.list_item_height())
@@ -8943,29 +8994,43 @@ impl GitPanel {
         // being affected.
         // As such, we need to ensure we show the correct label, depending on
         // the actual `file_count`.
-        let file_label = if file_count == 1 { "File" } else { "Files" };
+        let file_label = if file_count == 1 {
+            i18n::tr("File")
+        } else {
+            i18n::tr("Files")
+        };
 
         let stage_title = match (target_kind, will_unstage) {
-            (SelectionTargetKind::Directory, true) => "Unstage Folder",
-            (SelectionTargetKind::Directory, false) => "Stage Folder",
-            (SelectionTargetKind::File, true) => "Unstage File",
-            (SelectionTargetKind::File, false) => "Stage File",
-            (SelectionTargetKind::Multiple, true) => &format!("Unstage {file_count} {file_label}"),
-            (SelectionTargetKind::Multiple, false) => &format!("Stage {file_count} {file_label}"),
+            (SelectionTargetKind::Directory, true) => i18n::tr("Unstage Folder").to_string(),
+            (SelectionTargetKind::Directory, false) => i18n::tr("Stage Folder").to_string(),
+            (SelectionTargetKind::File, true) => i18n::tr("Unstage File").to_string(),
+            (SelectionTargetKind::File, false) => i18n::tr("Stage File").to_string(),
+            (SelectionTargetKind::Multiple, true) => i18n::tr("Unstage {count} {label}")
+                .replace("{count}", &file_count.to_string())
+                .replace("{label}", file_label),
+            (SelectionTargetKind::Multiple, false) => i18n::tr("Stage {count} {label}")
+                .replace("{count}", &file_count.to_string())
+                .replace("{label}", file_label),
         };
 
         let restore_title = match (target_kind, all_trashed, all_deleted) {
-            (SelectionTargetKind::Directory, true, _) => "Trash Folder",
-            (SelectionTargetKind::Directory, false, _) => "Discard Changes",
-            (SelectionTargetKind::File, true, _) => "Trash File",
-            (SelectionTargetKind::File, _, true) => "Restore File",
-            (SelectionTargetKind::File, _, _) => "Discard Changes",
-            (SelectionTargetKind::Multiple, true, _) => &format!("Trash {file_count} {file_label}"),
-            (SelectionTargetKind::Multiple, _, true) => {
-                &format!("Restore {file_count} {file_label}")
+            (SelectionTargetKind::Directory, true, _) => i18n::tr("Trash Folder").to_string(),
+            (SelectionTargetKind::Directory, false, _) => {
+                i18n::tr("Discard Changes").to_string()
             }
+            (SelectionTargetKind::File, true, _) => i18n::tr("Trash File").to_string(),
+            (SelectionTargetKind::File, _, true) => i18n::tr("Restore File").to_string(),
+            (SelectionTargetKind::File, _, _) => i18n::tr("Discard Changes").to_string(),
+            (SelectionTargetKind::Multiple, true, _) => i18n::tr("Trash {count} {label}")
+                .replace("{count}", &file_count.to_string())
+                .replace("{label}", file_label),
+            (SelectionTargetKind::Multiple, _, true) => i18n::tr("Restore {count} {label}")
+                .replace("{count}", &file_count.to_string())
+                .replace("{label}", file_label),
             (SelectionTargetKind::Multiple, _, _) => {
-                &format!("Discard Changes to {file_count} {file_label}")
+                i18n::tr("Discard Changes to {count} {label}")
+                    .replace("{count}", &file_count.to_string())
+                    .replace("{label}", file_label)
             }
         };
         let is_bulk = matches!(target_kind, SelectionTargetKind::Multiple);

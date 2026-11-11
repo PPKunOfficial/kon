@@ -2871,7 +2871,9 @@ impl ConversationView {
                     .map(|this| {
                         if show_fallback_description {
                             this.child(
-                                Label::new("Choose one of the following authentication options:")
+                                Label::new(i18n::tr(
+                                    "Choose one of the following authentication options:",
+                                ))
                                     .size(LabelSize::Small)
                                     .color(Color::Muted),
                             )
@@ -3310,8 +3312,8 @@ impl ConversationView {
         let action_slot = h_flex()
             .gap_1()
             .child(
-                Button::new("retry-agent-launch", "Retry")
-                    .tooltip(Tooltip::text("Try to restart the agent"))
+                Button::new("retry-agent-launch", i18n::tr("Retry"))
+                    .tooltip(Tooltip::text(i18n::tr("Try to restart the agent")))
                     .on_click(cx.listener(move |this, _, window, cx| {
                         this.retry_connection(window, cx);
                     })),
@@ -3902,17 +3904,12 @@ fn native_available_skills(
 
 fn placeholder_text(agent_name: &str, has_commands: bool) -> String {
     if agent_name == agent::ZED_AGENT_ID.as_ref() {
-        format!(
-            "Message the {}, @ to include context, / for commands",
-            agent_name
-        )
+        i18n::tr("Message the {}, @ to include context, / for commands")
+            .replace("{}", agent_name)
     } else if has_commands {
-        format!(
-            "Message {} — @ to include context, / for commands",
-            agent_name
-        )
+        i18n::tr("Message {} — @ to include context, / for commands").replace("{}", agent_name)
     } else {
-        format!("Message {} — @ to include context", agent_name)
+        i18n::tr("Message {} — @ to include context").replace("{}", agent_name)
     }
 }
 
@@ -4045,8 +4042,8 @@ impl Render for ConversationView {
                                     div()
                                         .debug_selector(|| "discard-saved-agent-submissions".into())
                                         .child(
-                                            Button::new("discard-saved-agent-submissions", "Discard Saved Submissions")
-                                                .tooltip(Tooltip::text("Discard local copies only; does not cancel agent work"))
+                                            Button::new("discard-saved-agent-submissions", i18n::tr("Discard Saved Submissions"))
+                                                .tooltip(Tooltip::text(i18n::tr("Discard local copies only; does not cancel agent work")))
                                                 .on_click(cx.listener(|this, _, _, cx| {
                                                     this.saved_submissions.clear();
                                                     if let Some(recovery) = &mut this.recovery {

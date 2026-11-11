@@ -242,7 +242,7 @@ impl ProjectDiff {
             DiffMultibuffer::new(
                 branch_diff,
                 Capability::ReadWrite,
-                "No uncommitted changes",
+                i18n::tr("No uncommitted changes"),
                 move |editor, cx| {
                     editor.set_diff_hunk_renderer(Some(Arc::new(DefaultDiffHunkRenderer)), cx);
                     editor.rhs_editor().update(cx, |rhs_editor, _cx| {
@@ -447,7 +447,7 @@ impl Item for ProjectDiff {
     }
 
     fn tab_content_text(&self, _detail: usize, _cx: &App) -> SharedString {
-        "Uncommitted Changes".into()
+        i18n::tr("Uncommitted Changes").into()
     }
 
     fn telemetry_event_text(&self) -> Option<&'static str> {
@@ -846,7 +846,7 @@ impl Render for ProjectDiffToolbar {
                             .icon_size(IconSize::Small)
                             .disabled(!button_states.prev_next)
                             .tooltip(Tooltip::for_action_title_in(
-                                "Go to Previous Hunk",
+                                i18n::tr("Go to Previous Hunk"),
                                 &GoToPreviousHunk,
                                 &focus_handle,
                             ))
@@ -859,7 +859,7 @@ impl Render for ProjectDiffToolbar {
                             .icon_size(IconSize::Small)
                             .disabled(!button_states.prev_next)
                             .tooltip(Tooltip::for_action_title_in(
-                                "Go to Next Hunk",
+                                i18n::tr("Go to Next Hunk"),
                                 &GoToHunk,
                                 &focus_handle,
                             ))
@@ -873,9 +873,9 @@ impl Render for ProjectDiffToolbar {
                 h_group_sm()
                     .when(button_states.selection, |this| {
                         this.child(
-                            Button::new("stage", "Toggle Staged")
+                            Button::new("stage", i18n::tr("Toggle Staged"))
                                 .tooltip(Tooltip::for_action_title_in(
-                                    "Toggle Staged",
+                                    i18n::tr("Toggle Staged"),
                                     &ToggleStaged,
                                     &focus_handle,
                                 ))
@@ -887,10 +887,10 @@ impl Render for ProjectDiffToolbar {
                     })
                     .when(!button_states.selection, |this| {
                         this.child(
-                            Button::new("stage", "Stage")
+                            Button::new("stage", i18n::tr("Stage"))
                                 .disabled(!button_states.stage)
                                 .tooltip(Tooltip::for_action_title_in(
-                                    "Stage and Go to Next Hunk",
+                                    i18n::tr("Stage and Go to Next Hunk"),
                                     &StageAndNext,
                                     &focus_handle,
                                 ))
@@ -899,10 +899,10 @@ impl Render for ProjectDiffToolbar {
                                 })),
                         )
                         .child(
-                            Button::new("unstage", "Unstage")
+                            Button::new("unstage", i18n::tr("Unstage"))
                                 .disabled(!button_states.unstage)
                                 .tooltip(Tooltip::for_action_title_in(
-                                    "Unstage and Go to Next Hunk",
+                                    i18n::tr("Unstage and Go to Next Hunk"),
                                     &UnstageAndNext,
                                     &focus_handle,
                                 ))
@@ -917,10 +917,10 @@ impl Render for ProjectDiffToolbar {
                 button_states.unstage_all && !button_states.stage_all,
                 |this| {
                     this.child(
-                        Button::new("unstage-all", "Unstage All")
+                        Button::new("unstage-all", i18n::tr("Unstage All"))
                             .width(stage_all_button_width)
                             .tooltip(Tooltip::for_action_title_in(
-                                "Unstage All Changes",
+                                i18n::tr("Unstage All Changes"),
                                 &UnstageAll,
                                 &focus_handle,
                             ))
@@ -934,11 +934,11 @@ impl Render for ProjectDiffToolbar {
                 !button_states.unstage_all || button_states.stage_all,
                 |this| {
                     this.child(
-                        Button::new("stage-all", "Stage All")
+                        Button::new("stage-all", i18n::tr("Stage All"))
                             .width(stage_all_button_width)
                             .disabled(!button_states.stage_all)
                             .tooltip(Tooltip::for_action_title_in(
-                                "Stage All Changes",
+                                i18n::tr("Stage All Changes"),
                                 &StageAll,
                                 &focus_handle,
                             ))
@@ -950,9 +950,9 @@ impl Render for ProjectDiffToolbar {
             )
             .child(Divider::vertical())
             .child(
-                Button::new("commit", "Commit")
+                Button::new("commit", i18n::tr("Commit"))
                     .tooltip(Tooltip::for_action_title_in(
-                        "Commit",
+                        i18n::tr("Commit"),
                         &Commit,
                         &focus_handle,
                     ))
@@ -978,7 +978,7 @@ pub(crate) fn render_send_review_to_agent_button(
 ) -> Button {
     Button::new(
         "send-review",
-        format!("Send Review to Agent ({})", review_count),
+        i18n::tr("Send Review to Agent ({})").replace("{}", &review_count.to_string()),
     )
     .start_icon(
         Icon::new(IconName::ZedAssistant)
@@ -986,7 +986,7 @@ pub(crate) fn render_send_review_to_agent_button(
             .color(Color::Muted),
     )
     .tooltip(Tooltip::for_action_title_in(
-        "Send all review comments to the Agent panel",
+        i18n::tr("Send all review comments to the Agent panel"),
         &SendReviewToAgent,
         focus_handle,
     ))

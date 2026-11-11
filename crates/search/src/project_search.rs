@@ -1070,18 +1070,18 @@ impl Render for ProjectSearchView {
 
             let heading_text = match model.search_state {
                 SearchState::Running { .. } if model.search_state.no_results_so_far() => {
-                    "No Results"
+                    i18n::tr("No Results")
                 }
                 SearchState::Running {
                     activity: SearchActivity::WaitingForScan,
                     ..
-                } => "Loading project…",
+                } => i18n::tr("Loading project…"),
                 SearchState::Running {
                     activity: SearchActivity::Searching,
                     ..
-                } => "Searching…",
-                SearchState::Completed(SearchCompletion::NoResults) => "No Results",
-                _ => "Search All Files",
+                } => i18n::tr("Searching…"),
+                SearchState::Completed(SearchCompletion::NoResults) => i18n::tr("No Results"),
+                _ => i18n::tr("Search All Files"),
             };
 
             let heading_text = div()
@@ -1091,7 +1091,9 @@ impl Render for ProjectSearchView {
             let page_content: Option<AnyElement> = match model.search_state {
                 SearchState::Idle => Some(self.landing_text_minor(cx).into_any_element()),
                 _ if model.search_state.no_results_so_far() => Some(
-                    Label::new("No results found in this project for the provided query")
+                    Label::new(i18n::tr(
+                        "No results found in this project for the provided query",
+                    ))
                         .size(LabelSize::Small)
                         .into_any_element(),
                 ),
@@ -1543,7 +1545,7 @@ impl ProjectSearchView {
 
         let query_editor = cx.new(|cx| {
             let mut editor = Editor::auto_height(1, 4, window, cx);
-            editor.set_placeholder_text("Search all files…", window, cx);
+            editor.set_placeholder_text(i18n::tr("Search all files…"), window, cx);
             editor.set_use_autoclose(false);
             editor.set_use_selection_highlight(false);
             editor.set_text(query_text, window, cx);
@@ -1604,7 +1606,7 @@ impl ProjectSearchView {
         ));
         let replacement_editor = cx.new(|cx| {
             let mut editor = Editor::auto_height(1, 4, window, cx);
-            editor.set_placeholder_text(REPLACE_PLACEHOLDER, window, cx);
+            editor.set_placeholder_text(i18n::tr(REPLACE_PLACEHOLDER), window, cx);
             if let Some(text) = replacement_text {
                 editor.set_text(text, window, cx);
             }
@@ -1639,7 +1641,7 @@ impl ProjectSearchView {
 
         let included_files_editor = cx.new(|cx| {
             let mut editor = Editor::single_line(window, cx);
-            editor.set_placeholder_text(INCLUDE_PLACEHOLDER, window, cx);
+            editor.set_placeholder_text(i18n::tr(INCLUDE_PLACEHOLDER), window, cx);
 
             editor
         });
@@ -1654,7 +1656,7 @@ impl ProjectSearchView {
 
         let excluded_files_editor = cx.new(|cx| {
             let mut editor = Editor::single_line(window, cx);
-            editor.set_placeholder_text(EXCLUDE_PLACEHOLDER, window, cx);
+            editor.set_placeholder_text(i18n::tr(EXCLUDE_PLACEHOLDER), window, cx);
 
             editor
         });
@@ -2520,16 +2522,16 @@ impl ProjectSearchView {
             .gap_1()
             .child(
                 Label::new(if EditorSettings::get_global(cx).search.search_on_type {
-                    "Start typing to search. For more options:"
+                    i18n::tr("Start typing to search. For more options:")
                 } else {
-                    "Hit enter to search. For more options:"
+                    i18n::tr("Hit enter to search. For more options:")
                 })
                 .color(Color::Muted)
                 .mb_2(),
             )
             .child(render_landing_action_button(
                 "filter-paths",
-                "Include/exclude specific paths",
+                i18n::tr("Include/exclude specific paths"),
                 IconName::Filter,
                 &ToggleFilters,
                 focus_handle.clone(),
@@ -2538,7 +2540,7 @@ impl ProjectSearchView {
             ))
             .child(render_landing_action_button(
                 "find-replace",
-                "Find and replace",
+                i18n::tr("Find and replace"),
                 IconName::Replace,
                 &ToggleReplace,
                 focus_handle.clone(),
@@ -2547,7 +2549,7 @@ impl ProjectSearchView {
             ))
             .child(render_landing_action_button(
                 "regex",
-                "Match with regex",
+                i18n::tr("Match with regex"),
                 IconName::Regex,
                 &ToggleRegex,
                 focus_handle.clone(),
@@ -2556,7 +2558,7 @@ impl ProjectSearchView {
             ))
             .child(render_landing_action_button(
                 "match-case",
-                "Match case",
+                i18n::tr("Match case"),
                 IconName::CaseSensitive,
                 &ToggleCaseSensitive,
                 focus_handle.clone(),
@@ -2565,7 +2567,7 @@ impl ProjectSearchView {
             ))
             .child(render_landing_action_button(
                 "match-whole-words",
-                "Match whole words",
+                i18n::tr("Match whole words"),
                 IconName::WholeWord,
                 &ToggleWholeWord,
                 focus_handle,
@@ -3194,7 +3196,7 @@ impl Render for ProjectSearchBar {
                 IconButton::new("project-search-filter-button", IconName::Filter)
                     .shape(IconButtonShape::Square)
                     .tooltip(|_window, cx| {
-                        Tooltip::for_action("Toggle Filters", &ToggleFilters, cx)
+                        Tooltip::for_action(i18n::tr("Toggle Filters"), &ToggleFilters, cx)
                     })
                     .on_click(cx.listener(|this, _, window, cx| {
                         this.toggle_filters(window, cx);
@@ -3209,7 +3211,7 @@ impl Render for ProjectSearchBar {
                         let focus_handle = focus_handle.clone();
                         move |_window, cx| {
                             Tooltip::for_action_in(
-                                "Toggle Filters",
+                                i18n::tr("Toggle Filters"),
                                 &ToggleFilters,
                                 &focus_handle,
                                 cx,
@@ -3224,7 +3226,7 @@ impl Render for ProjectSearchBar {
                     .as_ref()
                     .map(|search| search.read(cx).replace_enabled)
                     .and_then(|enabled| enabled.then_some(ActionButtonState::Toggled)),
-                "Toggle Replace",
+                i18n::tr("Toggle Replace"),
                 &ToggleReplace,
                 focus_handle.clone(),
                 cx,
@@ -3235,9 +3237,9 @@ impl Render for ProjectSearchBar {
         let is_collapsed = search.results_editor.read(cx).has_any_buffer_folded(cx);
 
         let (icon, tooltip_label) = if is_collapsed {
-            (IconName::ChevronUpDown, "Expand All Search Results")
+            (IconName::ChevronUpDown, i18n::tr("Expand All Search Results"))
         } else {
-            (IconName::ChevronDownUp, "Collapse All Search Results")
+            (IconName::ChevronDownUp, i18n::tr("Collapse All Search Results"))
         };
 
         let expand_button = IconButton::new("project-search-collapse-expand", icon)
@@ -3283,7 +3285,7 @@ impl Render for ProjectSearchBar {
                     "project-search-replace-button",
                     IconName::ReplaceNext,
                     is_search_underway.then_some(ActionButtonState::Disabled),
-                    "Replace Next Match",
+                    i18n::tr("Replace Next Match"),
                     &ReplaceNext,
                     focus_handle.clone(),
                     cx,
@@ -3293,7 +3295,7 @@ impl Render for ProjectSearchBar {
                     "project-search-replace-button",
                     IconName::ReplaceAll,
                     Default::default(),
-                    "Replace All Matches",
+                    i18n::tr("Replace All Matches"),
                     &ReplaceAll,
                     focus_handle,
                     cx,
@@ -3332,7 +3334,7 @@ impl Render for ProjectSearchBar {
                     IconButton::new("project-search-opened-only", IconName::FolderSearch)
                         .shape(IconButtonShape::Square)
                         .toggle_state(self.is_opened_only_enabled(cx))
-                        .tooltip(Tooltip::text("Only Search Open Files"))
+                        .tooltip(Tooltip::text(i18n::tr("Only Search Open Files")))
                         .on_click(cx.listener(|this, _, window, cx| {
                             this.toggle_opened_only(window, cx);
                         })),

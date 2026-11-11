@@ -134,8 +134,15 @@ impl CommandPalette {
                     return None;
                 }
 
+                let name = humanize_action_name(action.name());
                 Some(Command {
-                    name: localize_action_name(humanize_action_name(action.name())),
+                    name: name.clone().into(),
+                    display_name: localize_action_name(name.clone()),
+                    search_text: if let Some(translated) = i18n::lookup(&name) {
+                        format!("{name} {translated}").into()
+                    } else {
+                        name.clone().into()
+                    },
                     action,
                     usage: None,
                 })
@@ -218,6 +225,8 @@ pub struct CommandPaletteDelegate {
 
 struct Command {
     name: SharedString,
+    display_name: SharedString,
+    search_text: SharedString,
     action: Box<dyn Action>,
     usage: Option<CommandUsage>,
 }
@@ -317,6 +326,8 @@ impl Clone for Command {
     fn clone(&self) -> Self {
         Self {
             name: self.name.clone(),
+            display_name: self.display_name.clone(),
+            search_text: self.search_text.clone(),
             action: self.action.boxed_clone(),
             usage: self.usage,
         }
@@ -372,6 +383,8 @@ impl CommandPaletteDelegate {
             let string = SharedString::from(string);
             commands.push(Command {
                 name: string.clone(),
+                display_name: string.clone(),
+                search_text: string.clone(),
                 action,
                 usage: None,
             });
@@ -619,7 +632,7 @@ impl PickerDelegate for CommandPaletteDelegate {
                 let candidates = commands
                     .iter()
                     .enumerate()
-                    .map(|(ix, command)| StringMatchCandidate::new(ix, &command.name))
+                    .map(|(ix, command)| StringMatchCandidate::new(ix, &command.search_text))
                     .collect::<Vec<_>>();
 
                 let mut matches = fuzzy_nucleo::match_strings_async(
@@ -791,8 +804,12 @@ impl PickerDelegate for CommandPaletteDelegate {
                         .gap_2()
                         .child(
                             HighlightedLabel::new(
-                                command.name.clone(),
-                                matching_command.positions.clone(),
+                                command.display_name.clone(),
+                                if command.search_text == command.display_name {
+                                    matching_command.positions.clone()
+                                } else {
+                                    Vec::new()
+                                },
                             )
                             .truncate(),
                         )
@@ -1385,6 +1402,8 @@ mod tests {
                 .enumerate()
                 .map(|(index, (name, action))| Command {
                     name: SharedString::from(name),
+                    display_name: SharedString::from(name),
+                    search_text: SharedString::from(name),
                     action,
                     usage: (index < 2).then_some(CommandUsage {
                         last_invoked: 0,

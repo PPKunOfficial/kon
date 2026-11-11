@@ -3883,9 +3883,12 @@ impl Workspace {
                     let answer = cx.update(|window, cx| {
                         window.prompt(
                             PromptLevel::Warning,
-                            "Do you want to leave the current call?",
+                            i18n::tr("Do you want to leave the current call?"),
                             None,
-                            &["Close window and hang up", "Cancel"],
+                            &[
+                                i18n::tr("Close window and hang up"),
+                                i18n::tr("Cancel"),
+                            ],
                             cx,
                         )
                     })?;
@@ -4131,9 +4134,15 @@ impl Workspace {
                         );
                         window.prompt(
                             PromptLevel::Warning,
-                            "Do you want to save all changes in the following files?",
+                            i18n::tr(
+                                "Do you want to save all changes in the following files?",
+                            ),
                             Some(&detail),
-                            &["Save all", "Discard all", "Cancel"],
+                            &[
+                                i18n::tr("Save all"),
+                                i18n::tr("Discard all"),
+                                i18n::tr("Cancel"),
+                            ],
                             cx,
                         )
                     })?;
@@ -6874,7 +6883,7 @@ impl Workspace {
                     cx,
                 )
                 .detach_and_prompt_err(
-                    "Failed to join project",
+                    i18n::tr("Failed to join project"),
                     window,
                     cx,
                     |error, _, _| Some(format!("{error:#}")),
@@ -9823,7 +9832,10 @@ fn notify_if_database_failed(window: WindowHandle<MultiWorkspace>, cx: &mut Asyn
                         cx,
                         |cx| {
                             cx.new(|cx| {
-                                MessageNotification::new("Failed to load the database file.", cx)
+                                MessageNotification::new(
+                                    i18n::tr("Failed to load the database file."),
+                                    cx,
+                                )
                                     .primary_message("File an Issue")
                                     .primary_icon(IconName::Plus)
                                     .primary_on_click(|window, cx| {
@@ -12165,9 +12177,9 @@ pub fn reload(cx: &mut App) {
             .update(cx, |_, window, cx| {
                 window.prompt(
                     PromptLevel::Info,
-                    "Are you sure you want to restart?",
+                    i18n::tr("Are you sure you want to restart?"),
                     None,
-                    &["Restart", "Cancel"],
+                    &[i18n::tr("Restart"), i18n::tr("Cancel")],
                     cx,
                 )
             })

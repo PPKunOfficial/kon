@@ -39,9 +39,12 @@ impl SessionNotice {
                             IconButton::new("dismiss", IconName::Close)
                                 .icon_size(IconSize::Small)
                                 .icon_color(Color::Muted)
-                                .aria_label(format!("Dismiss notice: {}", notice.title))
+                                .aria_label(
+                                    i18n::tr("Dismiss notice: {}")
+                                        .replace("{}", notice.title.as_ref()),
+                                )
                                 .tab_index(0_isize)
-                                .tooltip(Tooltip::text("Dismiss Notice"))
+                                .tooltip(Tooltip::text(i18n::tr("Dismiss Notice")))
                                 .on_click(on_dismiss),
                         ),
                 ),

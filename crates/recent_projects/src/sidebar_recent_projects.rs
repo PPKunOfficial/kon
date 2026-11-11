@@ -140,7 +140,7 @@ impl PickerDelegate for SidebarRecentProjectsDelegate {
     }
 
     fn placeholder_text(&self, _window: &mut Window, _cx: &mut App) -> Arc<str> {
-        "Search projects…".into()
+        i18n::tr("Search projects…").into()
     }
 
     fn match_count(&self) -> usize {

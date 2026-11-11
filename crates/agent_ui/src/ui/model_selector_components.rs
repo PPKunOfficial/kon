@@ -278,7 +278,7 @@ impl RenderOnce for ModelSelectorTooltip {
                 h_flex()
                     .gap_2()
                     .justify_between()
-                    .child(Label::new("Change Model"))
+                    .child(Label::new(i18n::tr("Change Model")))
                     .child(KeyBinding::for_action(&ToggleModelSelector, cx)),
             )
             .when(self.show_cycle_row, |this| {
@@ -289,7 +289,7 @@ impl RenderOnce for ModelSelectorTooltip {
                         .border_t_1()
                         .border_color(cx.theme().colors().border_variant)
                         .justify_between()
-                        .child(Label::new("Cycle Favorite Models"))
+                        .child(Label::new(i18n::tr("Cycle Favorite Models")))
                         .child(KeyBinding::for_action(&CycleFavoriteModels, cx)),
                 )
             })

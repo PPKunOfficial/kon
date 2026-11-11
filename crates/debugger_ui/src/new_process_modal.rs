@@ -543,10 +543,10 @@ pub(crate) enum NewProcessMode {
 impl std::fmt::Display for NewProcessMode {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mode = match self {
-            NewProcessMode::Task => "Run",
-            NewProcessMode::Debug => "Debug",
-            NewProcessMode::Attach => "Attach",
-            NewProcessMode::Launch => "Launch",
+            NewProcessMode::Task => i18n::tr("Run"),
+            NewProcessMode::Debug => i18n::tr("Debug"),
+            NewProcessMode::Attach => i18n::tr("Attach"),
+            NewProcessMode::Launch => i18n::tr("Launch"),
         };
 
         write!(f, "{}", mode)
@@ -749,7 +749,7 @@ impl Render for NewProcessModal {
                                 ),
                             )
                             .child(
-                                Button::new("debugger-spawn", "Start")
+                                Button::new("debugger-spawn", i18n::tr("Start"))
                                     .on_click(cx.listener(|this, _, window, cx| {
                                         this.start_new_session(window, cx)
                                     }))
@@ -932,7 +932,7 @@ impl ConfigureMode {
             .child(
                 h_flex()
                     .gap_1()
-                    .child(Label::new("Debugger:").color(Color::Muted))
+                    .child(Label::new(i18n::tr("Debugger:")).color(Color::Muted))
                     .child(adapter_menu),
             )
             .child(self.program.clone())

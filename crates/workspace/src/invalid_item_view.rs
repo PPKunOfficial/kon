@@ -139,7 +139,7 @@ impl Render for InvalidItemView {
                     v_flex()
                         .justify_center()
                         .gap_2()
-                        .child(h_flex().justify_center().child("Could not open file"))
+                        .child(h_flex().justify_center().child(i18n::tr("Could not open file")))
                         .child(
                             h_flex()
                                 .justify_center()

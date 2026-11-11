@@ -148,7 +148,7 @@ impl TerminalPanel {
                         PopoverMenu::new("terminal-tab-bar-popover-menu")
                             .trigger_with_tooltip(
                                 IconButton::new("plus", IconName::Plus).icon_size(IconSize::Small),
-                                Tooltip::text("New…"),
+                                Tooltip::text(i18n::tr("New…")),
                             )
                             .anchor(Anchor::TopRight)
                             .with_handle(pane.new_item_context_menu_handle.clone())
@@ -157,14 +157,14 @@ impl TerminalPanel {
                                 let menu = ContextMenu::build(window, cx, |menu, _, _| {
                                     menu.context(focus_handle.clone())
                                         .action(
-                                            "New Terminal",
+                                            i18n::tr("New Terminal"),
                                             workspace::NewTerminal::default().boxed_clone(),
                                         )
                                         // We want the focus to go back to terminal panel once task modal is dismissed,
                                         // hence we focus that first. Otherwise, we'd end up without a focused element, as
                                         // context menu will be gone the moment we spawn the modal.
                                         .action(
-                                            "Spawn Task",
+                                            i18n::tr("Spawn Task"),
                                             zed_actions::Spawn::modal().boxed_clone(),
                                         )
                                 });
@@ -182,7 +182,7 @@ impl TerminalPanel {
                             .trigger_with_tooltip(
                                 IconButton::new("terminal-pane-split", IconName::Split)
                                     .icon_size(IconSize::Small),
-                                Tooltip::text("Split Pane"),
+                                Tooltip::text(i18n::tr("Split Pane")),
                             )
                             .anchor(Anchor::TopRight)
                             .with_handle(pane.split_item_context_menu_handle.clone())
@@ -193,10 +193,22 @@ impl TerminalPanel {
                                             split_context.clone(),
                                             |menu, split_context| menu.context(split_context),
                                         )
-                                        .action("Split Right", SplitRight::default().boxed_clone())
-                                        .action("Split Left", SplitLeft::default().boxed_clone())
-                                        .action("Split Up", SplitUp::default().boxed_clone())
-                                        .action("Split Down", SplitDown::default().boxed_clone())
+                                        .action(
+                                            i18n::tr("Split Right"),
+                                            SplitRight::default().boxed_clone(),
+                                        )
+                                        .action(
+                                            i18n::tr("Split Left"),
+                                            SplitLeft::default().boxed_clone(),
+                                        )
+                                        .action(
+                                            i18n::tr("Split Up"),
+                                            SplitUp::default().boxed_clone(),
+                                        )
+                                        .action(
+                                            i18n::tr("Split Down"),
+                                            SplitDown::default().boxed_clone(),
+                                        )
                                     })
                                     .into()
                                 }
@@ -1413,7 +1425,7 @@ impl Render for FailedToSpawnTerminal {
             .menu(move |window, cx| {
                 Some(ContextMenu::build(window, cx, |context_menu, _, _| {
                     context_menu
-                        .action("Open Settings", zed_actions::OpenSettings.boxed_clone())
+                        .action(i18n::tr("Open Settings"), zed_actions::OpenSettings.boxed_clone())
                         .action(
                             "Edit settings.json",
                             zed_actions::OpenSettingsFile.boxed_clone(),
@@ -1439,7 +1451,7 @@ impl Render for FailedToSpawnTerminal {
                     .items_center()
                     .justify_center()
                     .text_center()
-                    .child(Label::new("Failed to spawn terminal"))
+                    .child(Label::new(i18n::tr("Failed to spawn terminal")))
                     .child(
                         Label::new(self.error.to_string())
                             .size(LabelSize::Small)
@@ -1448,7 +1460,7 @@ impl Render for FailedToSpawnTerminal {
                     )
                     .child(SplitButton::new(
                         ButtonLike::new("open-settings-ui")
-                            .child(Label::new("Edit Settings").size(LabelSize::Small))
+                            .child(Label::new(i18n::tr("Edit Settings")).size(LabelSize::Small))
                             .on_click(|_, window, cx| {
                                 window.dispatch_action(zed_actions::OpenSettings.boxed_clone(), cx);
                             }),

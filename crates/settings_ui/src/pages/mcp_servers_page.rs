@@ -55,10 +55,12 @@ pub(crate) fn render_mcp_servers_page(
                 .px_8()
                 .gap_2()
                 .child(
-                    v_flex().child(Label::new("Configured Servers")).child(
-                        Label::new("Manage servers connected directly or via extensions.")
-                            .size(LabelSize::Small)
-                            .color(Color::Muted),
+                    v_flex().child(Label::new(i18n::tr("Configured Servers"))).child(
+                        Label::new(i18n::tr(
+                            "Manage servers connected directly or via extensions.",
+                        ))
+                        .size(LabelSize::Small)
+                        .color(Color::Muted),
                     ),
                 )
                 .child(server_list)
@@ -108,7 +110,9 @@ fn render_empty_state(cx: &App) -> AnyElement {
         .border_color(cx.theme().colors().border.opacity(0.6))
         .rounded_sm()
         .child(
-            Label::new("No MCP servers added yet. Click \"Add Server\" to get started.")
+            Label::new(i18n::tr(
+                "No MCP servers added yet. Click \"Add Server\" to get started.",
+            ))
                 .color(Color::Muted)
                 .size(LabelSize::Small),
         )
@@ -124,7 +128,9 @@ fn render_no_project_state(cx: &App) -> AnyElement {
         .border_color(cx.theme().colors().border.opacity(0.6))
         .rounded_sm()
         .child(
-            Label::new("No active project found. Open a workspace to manage MCP servers.")
+            Label::new(i18n::tr(
+                "No active project found. Open a workspace to manage MCP servers.",
+            ))
                 .color(Color::Muted)
                 .size(LabelSize::Small),
         )
@@ -408,7 +414,7 @@ fn render_status_details(
                     )
                     .when(should_show_logout, |this| {
                         this.child(
-                            Button::new("error-logout", "Log Out")
+                            Button::new("error-logout", i18n::tr("Log Out"))
                                 .style(ButtonStyle::Outlined)
                                 .label_size(LabelSize::Small)
                                 .on_click({
@@ -441,13 +447,13 @@ fn render_status_details(
                                     .color(Color::Muted),
                             )
                             .child(
-                                Label::new("Authenticate to connect this server")
+                                Label::new(i18n::tr("Authenticate to connect this server"))
                                     .color(Color::Muted)
                                     .size(LabelSize::Small),
                             ),
                     )
                     .child(
-                        Button::new("authenticate-server", "Authenticate")
+                        Button::new("authenticate-server", i18n::tr("Authenticate"))
                             .style(ButtonStyle::Outlined)
                             .label_size(LabelSize::Small)
                             .on_click({
@@ -474,7 +480,7 @@ fn render_status_details(
                                 .color(Color::Muted),
                         )
                         .child(
-                            Label::new("A client secret is required to connect this server")
+                            Label::new(i18n::tr("A client secret is required to connect this server"))
                                 .color(Color::Muted)
                                 .size(LabelSize::Small),
                         ),
@@ -489,7 +495,7 @@ fn render_status_details(
                 .gap_2()
                 .child(div().size_3().flex_shrink_0())
                 .child(
-                    Label::new("Authenticating…")
+                    Label::new(i18n::tr("Authenticating…"))
                         .color(Color::Muted)
                         .size(LabelSize::Small),
                 )
@@ -504,7 +510,7 @@ fn render_status_details(
                     .w_full()
                     .justify_end()
                     .child(
-                        Button::new("running-logout", "Log Out")
+                        Button::new("running-logout", i18n::tr("Log Out"))
                             .style(ButtonStyle::Outlined)
                             .label_size(LabelSize::Small)
                             .on_click(move |_event, _window, cx| {
@@ -544,7 +550,7 @@ pub(crate) fn render_add_server_popover(
 
     let popover = PopoverMenu::new("add-mcp-server-popover")
         .trigger(
-            Button::new("add-mcp-server", "Add Server")
+            Button::new("add-mcp-server", i18n::tr("Add Server"))
                 .style(ButtonStyle::Outlined)
                 .track_focus(&focus_handle)
                 .start_icon(
@@ -1117,7 +1123,7 @@ fn render_form_actions(cx: &mut Context<SettingsWindow>) -> impl IntoElement {
         .justify_end()
         .pt_2()
         .child(
-            Button::new("mcp-form-cancel", "Cancel")
+            Button::new("mcp-form-cancel", i18n::tr("Cancel"))
                 .style(ButtonStyle::Subtle)
                 .on_click(cx.listener(|this, _, window, cx| {
                     this.mcp_server_form = None;
@@ -1125,7 +1131,7 @@ fn render_form_actions(cx: &mut Context<SettingsWindow>) -> impl IntoElement {
                 })),
         )
         .child(
-            Button::new("mcp-form-save", "Save")
+            Button::new("mcp-form-save", i18n::tr("Save"))
                 .style(ButtonStyle::Filled)
                 .on_click(cx.listener(|this, _, window, cx| {
                     save_mcp_server_form(this, window, cx);

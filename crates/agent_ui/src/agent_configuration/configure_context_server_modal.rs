@@ -562,7 +562,9 @@ impl ConfigureContextServerModal {
                     secret_editor: cx.new(|cx| {
                         let mut editor = Editor::single_line(window, cx);
                         editor.set_placeholder_text(
-                            "Enter client secret (leave empty for public clients)",
+                            i18n::tr(
+                                "Enter client secret (leave empty for public clients)",
+                            ),
                             window,
                             cx,
                         );
@@ -794,8 +796,10 @@ impl EventEmitter<DismissEvent> for ConfigureContextServerModal {}
 impl ConfigureContextServerModal {
     fn render_modal_header(&self) -> ModalHeader {
         let text: SharedString = match &self.source {
-            ConfigurationSource::Existing { .. } => "Configure MCP Server".into(),
-            ConfigurationSource::Extension { id, .. } => format!("Configure {}", id.0).into(),
+            ConfigurationSource::Existing { .. } => i18n::tr("Configure MCP Server").into(),
+            ConfigurationSource::Extension { id, .. } => {
+                i18n::tr("Configure {}").replace("{}", &id.0).into()
+            }
         };
         ModalHeader::new().headline(text)
     }
@@ -818,7 +822,7 @@ impl ConfigureContextServerModal {
                 ))
                 .into_any_element()
         } else {
-            Label::new(MODAL_DESCRIPTION)
+            Label::new(i18n::tr(MODAL_DESCRIPTION))
                 .color(Color::Muted)
                 .into_any_element()
         }
@@ -878,7 +882,7 @@ impl ConfigureContextServerModal {
                 } = &self.source
                 {
                     Some(
-                        Button::new("open-repository", "Open Repository")
+                        Button::new("open-repository", i18n::tr("Open Repository"))
                             .end_icon(
                                 Icon::new(IconName::ArrowUpRight)
                                     .size(IconSize::Small)
@@ -888,7 +892,7 @@ impl ConfigureContextServerModal {
                                 let repository_url = repository_url.clone();
                                 move |_window, cx| {
                                     Tooltip::with_meta(
-                                        "Open Repository",
+                                        i18n::tr("Open Repository"),
                                         None,
                                         repository_url.clone(),
                                         cx,
@@ -911,9 +915,9 @@ impl ConfigureContextServerModal {
                         Button::new(
                             "cancel",
                             if self.source.has_configuration_options() {
-                                "Cancel"
+                                i18n::tr("Cancel")
                             } else {
-                                "Dismiss"
+                                i18n::tr("Dismiss")
                             },
                         )
                         .key_binding(
@@ -1019,7 +1023,9 @@ impl ConfigureContextServerModal {
                     )
                     .child(
                         Label::new(
-                            "Enter your OAuth client secret, or leave empty for public clients",
+                            i18n::tr(
+                                "Enter your OAuth client secret, or leave empty for public clients",
+                            ),
                         )
                         .size(LabelSize::Small)
                         .color(Color::Muted),
@@ -1046,7 +1052,7 @@ impl ConfigureContextServerModal {
                         },
                     )))
                     .child(
-                        Button::new("submit-client-secret", "Submit")
+                        Button::new("submit-client-secret", i18n::tr("Submit"))
                             .style(ButtonStyle::Outlined)
                             .label_size(LabelSize::Small)
                             .on_click({
@@ -1145,7 +1151,9 @@ impl Render for ConfigureContextServerModal {
                                         .child(match &self.state {
                                             State::Idle => div(),
                                             State::Waiting => {
-                                                self.render_loading("Connecting Server…")
+                                                self.render_loading(i18n::tr(
+                                                    "Connecting Server…",
+                                                ))
                                             }
                                             State::AuthRequired { server_id } => {
                                                 self.render_auth_required(&server_id.clone(), cx)

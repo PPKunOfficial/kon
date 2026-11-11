@@ -569,29 +569,38 @@ impl TitleBar {
         let host: SharedString = options.display_name().into();
 
         let (tooltip_title, icon) = match options {
-            RemoteConnectionOptions::Ssh(_) => ("Remote Project", IconName::Server),
-            RemoteConnectionOptions::Wsl(_) => ("Remote Project", IconName::Linux),
+            RemoteConnectionOptions::Ssh(_) => (i18n::tr("Remote Project"), IconName::Server),
+            RemoteConnectionOptions::Wsl(_) => (i18n::tr("Remote Project"), IconName::Linux),
             RemoteConnectionOptions::Docker(_dev_container_connection) => {
-                ("Dev Container", IconName::Box)
+                (i18n::tr("Dev Container"), IconName::Box)
             }
             #[cfg(any(test, feature = "test-support"))]
-            RemoteConnectionOptions::Mock(_) => ("Mock Remote Project", IconName::Server),
+            RemoteConnectionOptions::Mock(_) => {
+                (i18n::tr("Mock Remote Project"), IconName::Server)
+            }
         };
 
         let (indicator_color, meta) = match self.project.read(cx).remote_connection_state(cx)? {
-            remote::ConnectionState::Connecting => (Color::Info, format!("Connecting to: {host}")),
-            remote::ConnectionState::Connected => (Color::Success, format!("Connected to: {host}")),
+            remote::ConnectionState::Connecting => (
+                Color::Info,
+                i18n::tr("Connecting to: {}").replace("{}", &host),
+            ),
+            remote::ConnectionState::Connected => (
+                Color::Success,
+                i18n::tr("Connected to: {}").replace("{}", &host),
+            ),
             remote::ConnectionState::HeartbeatMissed => (
                 Color::Warning,
-                format!("Connection attempt to {host} missed. Retrying..."),
+                i18n::tr("Connection attempt to {} missed. Retrying...").replace("{}", &host),
             ),
             remote::ConnectionState::Reconnecting => (
                 Color::Warning,
-                format!("Lost connection to {host}. Reconnecting..."),
+                i18n::tr("Lost connection to {}. Reconnecting...").replace("{}", &host),
             ),
-            remote::ConnectionState::Disconnected => {
-                (Color::Error, format!("Disconnected from {host}"))
-            }
+            remote::ConnectionState::Disconnected => (
+                Color::Error,
+                i18n::tr("Disconnected from {}").replace("{}", &host),
+            ),
         };
 
         let icon_color = match self.project.read(cx).remote_connection_state(cx)? {
@@ -657,7 +666,7 @@ impl TitleBar {
             return None;
         }
 
-        let button = Button::new("restricted_mode_trigger", "Restricted Mode")
+        let button = Button::new("restricted_mode_trigger", i18n::tr("Restricted Mode"))
             .style(ButtonStyle::Tinted(TintColor::Warning))
             .label_size(LabelSize::Small)
             .color(Color::Warning)
@@ -668,9 +677,9 @@ impl TitleBar {
             )
             .tooltip(|_, cx| {
                 Tooltip::with_meta(
-                    "You're in Restricted Mode",
+                    i18n::tr("You're in Restricted Mode"),
                     Some(&ToggleWorktreeSecurity),
-                    "Mark this project as trusted and unlock all features",
+                    i18n::tr("Mark this project as trusted and unlock all features"),
                     cx,
                 )
             })
@@ -726,7 +735,7 @@ impl TitleBar {
                         host_user.username
                     );
 
-                    Tooltip::with_meta(tooltip_title, None, "Click to Follow", cx)
+                    Tooltip::with_meta(tooltip_title, None, i18n::tr("Click to Follow"), cx)
                 })
                 .on_click({
                     let host_peer_id = host.peer_id;
@@ -816,7 +825,11 @@ impl TitleBar {
                     .selected_style(ButtonStyle::Tinted(TintColor::Accent))
                     .when(!is_project_selected, |s| s.color(Color::Muted)),
                 move |_window, cx| {
-                    Tooltip::for_action("Recent Projects", &zed_actions::OpenRecent::default(), cx)
+                    Tooltip::for_action(
+                        i18n::tr("Recent Projects"),
+                        &zed_actions::OpenRecent::default(),
+                        cx,
+                    )
                 },
             )
             .anchor(gpui::Anchor::TopLeft)
@@ -868,7 +881,11 @@ impl TitleBar {
                     .selected_style(ButtonStyle::Tinted(TintColor::Accent))
                     .when(!is_project_selected, |s| s.color(Color::Muted)),
                 move |_window, cx| {
-                    Tooltip::for_action("Recent Projects", &zed_actions::OpenRecent::default(), cx)
+                    Tooltip::for_action(
+                        i18n::tr("Recent Projects"),
+                        &zed_actions::OpenRecent::default(),
+                        cx,
+                    )
                 },
             )
             .anchor(gpui::Anchor::TopLeft)
@@ -970,7 +987,7 @@ impl TitleBar {
                         ),
                     move |_window, cx| {
                         Tooltip::with_meta(
-                            "Worktree",
+                            i18n::tr("Worktree"),
                             Some(&zed_actions::git::Worktree),
                             format!("Currently In Use: {}", worktree_label),
                             cx,
@@ -990,7 +1007,7 @@ impl TitleBar {
                 };
 
                 let trigger = if is_detached_head {
-                    Button::new("project_branch_trigger", "Create Branch")
+                    Button::new("project_branch_trigger", i18n::tr("Create Branch"))
                         .selected_style(ButtonStyle::Tinted(TintColor::Accent))
                         .label_size(LabelSize::Small)
                         .tab_index(0isize)
@@ -1187,7 +1204,7 @@ impl TitleBar {
             });
 
             ButtonLike::new("user-menu")
-                .aria_label("User menu")
+                .aria_label(i18n::tr("User menu"))
                 .tab_index(0isize)
                 .child(
                     h_flex()
@@ -1199,7 +1216,7 @@ impl TitleBar {
                 )
         } else {
             ButtonLike::new("user-menu")
-                .aria_label("User menu")
+                .aria_label(i18n::tr("User menu"))
                 .tab_index(0isize)
                 .child(Icon::new(IconName::ChevronDown).size(IconSize::Small))
         };
@@ -1263,7 +1280,7 @@ impl TitleBar {
                         .separator()
                     })
                     .when(is_signed_in, |this| {
-                        let mut this = this.header("Organization");
+                        let mut this = this.header(i18n::tr("Organization"));
 
                         for (organization, plan) in &organizations {
                             let organization = organization.clone();

@@ -814,10 +814,10 @@ impl Render for SoloDiffGitToolbar {
                 h_group_sm()
                     .when(button_states.selection, |el| {
                         el.child(
-                            Button::new("stage", "Toggle Staged")
+                            Button::new("stage", i18n::tr("Toggle Staged"))
                                 .disabled(!button_states.stage && !button_states.unstage)
                                 .tooltip(Tooltip::for_action_title_in(
-                                    "Toggle Staged",
+                                    i18n::tr("Toggle Staged"),
                                     &ToggleStaged,
                                     &focus_handle,
                                 ))
@@ -828,10 +828,10 @@ impl Render for SoloDiffGitToolbar {
                     })
                     .when(!button_states.selection, |el| {
                         el.child(
-                            Button::new("stage", "Stage")
+                            Button::new("stage", i18n::tr("Stage"))
                                 .disabled(!button_states.stage)
                                 .tooltip(Tooltip::for_action_title_in(
-                                    "Stage and Go to Next Hunk",
+                                    i18n::tr("Stage and Go to Next Hunk"),
                                     &StageAndNext,
                                     &focus_handle,
                                 ))
@@ -840,10 +840,10 @@ impl Render for SoloDiffGitToolbar {
                                 })),
                         )
                         .child(
-                            Button::new("unstage", "Unstage")
+                            Button::new("unstage", i18n::tr("Unstage"))
                                 .disabled(!button_states.unstage)
                                 .tooltip(Tooltip::for_action_title_in(
-                                    "Unstage and Go to Next Hunk",
+                                    i18n::tr("Unstage and Go to Next Hunk"),
                                     &UnstageAndNext,
                                     &focus_handle,
                                 ))
@@ -853,7 +853,7 @@ impl Render for SoloDiffGitToolbar {
                         )
                     })
                     .child(
-                        Button::new("restore", "Restore")
+                        Button::new("restore", i18n::tr("Restore"))
                             .tooltip(Tooltip::for_action_title_in(
                                 "Restore selected hunk",
                                 &Restore,
@@ -889,7 +889,7 @@ impl Render for SoloDiffGitToolbar {
             }))
             .child(Divider::vertical())
             .child(
-                Button::new("commit", "Commit")
+                Button::new("commit", i18n::tr("Commit"))
                     .tooltip(Tooltip::for_action_title_in(
                         "Commit",
                         &Commit,

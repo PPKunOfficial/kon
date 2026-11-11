@@ -4476,47 +4476,47 @@ impl Editor {
             .map(|(anchor, bp)| (anchor, Arc::from(bp)));
 
         let log_breakpoint_msg = if breakpoint.as_ref().is_some_and(|bp| bp.1.message.is_some()) {
-            "Edit Log Breakpoint"
+            i18n::tr("Edit Log Breakpoint")
         } else {
-            "Set Log Breakpoint"
+            i18n::tr("Set Log Breakpoint")
         };
 
         let condition_breakpoint_msg = if breakpoint
             .as_ref()
             .is_some_and(|bp| bp.1.condition.is_some())
         {
-            "Edit Condition Breakpoint"
+            i18n::tr("Edit Condition Breakpoint")
         } else {
-            "Set Condition Breakpoint"
+            i18n::tr("Set Condition Breakpoint")
         };
 
         let hit_condition_breakpoint_msg = if breakpoint
             .as_ref()
             .is_some_and(|bp| bp.1.hit_condition.is_some())
         {
-            "Edit Hit Condition Breakpoint"
+            i18n::tr("Edit Hit Condition Breakpoint")
         } else {
-            "Set Hit Condition Breakpoint"
+            i18n::tr("Set Hit Condition Breakpoint")
         };
 
         let set_breakpoint_msg = if breakpoint.as_ref().is_some() {
-            "Unset Breakpoint"
+            i18n::tr("Unset Breakpoint")
         } else {
-            "Set Breakpoint"
+            i18n::tr("Set Breakpoint")
         };
 
         let git_blame_msg = if self.show_git_blame_gutter {
-            "Close Git Blame"
+            i18n::tr("Close Git Blame")
         } else {
-            "Open Git Blame"
+            i18n::tr("Open Git Blame")
         };
 
         let bookmark = self.bookmark_at_row(row, window, cx);
 
         let set_bookmark_msg = if bookmark.as_ref().is_some() {
-            "Remove Bookmark"
+            i18n::tr("Remove Bookmark")
         } else {
-            "Add Bookmark"
+            i18n::tr("Add Bookmark")
         };
         let has_bookmark = bookmark.as_ref().is_some();
 
@@ -4533,12 +4533,14 @@ impl Editor {
 
         let toggle_state_entry: Option<(&str, Box<dyn Action>)> =
             breakpoint.as_ref().map(|bp| match bp.1.state {
-                BreakpointState::Enabled => {
-                    ("Disable", crate::actions::DisableBreakpoint.boxed_clone())
-                }
-                BreakpointState::Disabled => {
-                    ("Enable", crate::actions::EnableBreakpoint.boxed_clone())
-                }
+                BreakpointState::Enabled => (
+                    i18n::tr("Disable"),
+                    crate::actions::DisableBreakpoint.boxed_clone(),
+                ),
+                BreakpointState::Disabled => (
+                    i18n::tr("Enable"),
+                    crate::actions::EnableBreakpoint.boxed_clone(),
+                ),
             });
 
         let (anchor, breakpoint) =
@@ -4550,7 +4552,7 @@ impl Editor {
                 .when_some(
                     clear_runnable_task_status,
                     |this, (buffer_id, buffer_row)| {
-                        this.entry("Clear Run Status", None, {
+                        this.entry(i18n::tr("Clear Run Status"), None, {
                             let weak_editor = weak_editor.clone();
                             move |_window, cx| {
                                 weak_editor
@@ -4566,7 +4568,7 @@ impl Editor {
                 .when(run_to_cursor, |this| {
                     let weak_editor = weak_editor.clone();
                     this.entry(
-                        "Run to Cursor",
+                        i18n::tr("Run to Cursor"),
                         Some(RunToCursor.boxed_clone()),
                         move |window, cx| {
                             weak_editor

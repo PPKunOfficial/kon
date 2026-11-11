@@ -1189,126 +1189,177 @@ impl ProjectPanel {
                 menu.context(self.focus_handle.clone()).map(|menu| {
                     if is_read_only {
                         menu.when(is_markdown, |menu| {
-                            menu.action("Open Markdown Preview", Box::new(OpenMarkdownPreview))
+                            menu.action(
+                                i18n::tr("Open Markdown Preview"),
+                                Box::new(OpenMarkdownPreview),
+                            )
                         })
                         .when(is_svg, |menu| {
-                            menu.action("Open SVG Preview", Box::new(OpenSvgPreview))
+                            menu.action(i18n::tr("Open SVG Preview"), Box::new(OpenSvgPreview))
                         })
                         .when(is_dir, |menu| {
-                            menu.action("Search Inside", Box::new(NewSearchInDirectory))
+                            menu.action(i18n::tr("Search Inside"), Box::new(NewSearchInDirectory))
                         })
                     } else {
-                        menu.action("New File", Box::new(NewFile))
-                            .action("New Folder", Box::new(NewDirectory))
+                        menu.action(i18n::tr("New File"), Box::new(NewFile))
+                            .action(i18n::tr("New Folder"), Box::new(NewDirectory))
                             .separator()
                             .when(is_local, |menu| {
                                 menu.action(
-                                    ui::utils::reveal_in_file_manager_label(is_remote),
+                                    i18n::tr(ui::utils::reveal_in_file_manager_label(is_remote)),
                                     Box::new(RevealInFileManager),
                                 )
                             })
                             .when(is_local, |menu| {
-                                menu.action("Open in Default App", Box::new(OpenWithSystem))
+                                menu.action(
+                                    i18n::tr("Open in Default App"),
+                                    Box::new(OpenWithSystem),
+                                )
                             })
-                            .action("Open in Terminal", Box::new(OpenInTerminal))
+                            .action(i18n::tr("Open in Terminal"), Box::new(OpenInTerminal))
                             .when(is_markdown, |menu| {
-                                menu.action("Open Markdown Preview", Box::new(OpenMarkdownPreview))
+                                menu.action(
+                                    i18n::tr("Open Markdown Preview"),
+                                    Box::new(OpenMarkdownPreview),
+                                )
                             })
                             .when(is_svg, |menu| {
-                                menu.action("Open SVG Preview", Box::new(OpenSvgPreview))
+                                menu.action(
+                                    i18n::tr("Open SVG Preview"),
+                                    Box::new(OpenSvgPreview),
+                                )
                             })
                             .when(is_dir, |menu| {
-                                menu.separator()
-                                    .action("Find in Folder…", Box::new(NewSearchInDirectory))
+                                menu.separator().action(
+                                    i18n::tr("Find in Folder…"),
+                                    Box::new(NewSearchInDirectory),
+                                )
                             })
                             .when(is_unfoldable, |menu| {
-                                menu.action("Unfold Directory", Box::new(UnfoldDirectory))
+                                menu.action(
+                                    i18n::tr("Unfold Directory"),
+                                    Box::new(UnfoldDirectory),
+                                )
                             })
                             .when(is_foldable, |menu| {
-                                menu.action("Fold Directory", Box::new(FoldDirectory))
+                                menu.action(i18n::tr("Fold Directory"), Box::new(FoldDirectory))
                             })
                             .when(should_show_compare, |menu| {
-                                menu.separator()
-                                    .action("Compare Marked Files", Box::new(CompareMarkedFiles))
+                                menu.separator().action(
+                                    i18n::tr("Compare Marked Files"),
+                                    Box::new(CompareMarkedFiles),
+                                )
                             })
                             .separator()
-                            .action("Cut", Box::new(Cut))
-                            .action("Copy", Box::new(Copy))
-                            .action("Duplicate", Box::new(Duplicate))
-                            .action_disabled_when(!has_pasteable_content, "Paste", Box::new(Paste))
+                            .action(i18n::tr("Cut"), Box::new(Cut))
+                            .action(i18n::tr("Copy"), Box::new(Copy))
+                            .action(i18n::tr("Duplicate"), Box::new(Duplicate))
+                            .action_disabled_when(
+                                !has_pasteable_content,
+                                i18n::tr("Paste"),
+                                Box::new(Paste),
+                            )
                             .when(!is_collab, |menu| {
                                 let can_undo = self.undo_manager.can_undo();
                                 let can_redo = self.undo_manager.can_redo();
 
-                                menu.action_disabled_when(!can_undo, "Undo", Box::new(Undo))
-                                    .action_disabled_when(!can_redo, "Redo", Box::new(Redo))
+                                menu.action_disabled_when(
+                                    !can_undo,
+                                    i18n::tr("Undo"),
+                                    Box::new(Undo),
+                                )
+                                .action_disabled_when(!can_redo, i18n::tr("Redo"), Box::new(Redo))
                             })
                             .when(is_remote, |menu| {
-                                menu.separator()
-                                    .action("Download...", Box::new(DownloadFromRemote))
+                                menu.separator().action(
+                                    i18n::tr("Download..."),
+                                    Box::new(DownloadFromRemote),
+                                )
                             })
                             .separator()
-                            .action("Copy Path", Box::new(zed_actions::workspace::CopyPath))
                             .action(
-                                "Copy Relative Path",
+                                i18n::tr("Copy Path"),
+                                Box::new(zed_actions::workspace::CopyPath),
+                            )
+                            .action(
+                                i18n::tr("Copy Relative Path"),
                                 Box::new(zed_actions::workspace::CopyRelativePath),
                             )
                             .when(has_git_repo, |menu| {
                                 menu.separator()
                                     .when(!is_dir && self.has_git_changes(entry_id), |menu| {
                                         menu.action(
-                                            "Restore File",
+                                            i18n::tr("Restore File"),
                                             Box::new(git::RestoreFile { skip_prompt: false }),
                                         )
                                     })
-                                    .action("Add to .gitignore", Box::new(git::AddToGitignore))
                                     .action(
-                                        "Add to .git/info/exclude",
+                                        i18n::tr("Add to .gitignore"),
+                                        Box::new(git::AddToGitignore),
+                                    )
+                                    .action(
+                                        i18n::tr("Add to .git/info/exclude"),
                                         Box::new(git::AddToGitInfoExclude),
                                     )
                                     .when(has_history, |menu| {
-                                        menu.action("View History", Box::new(git::FileHistory))
+                                        menu.action(
+                                            i18n::tr("View History"),
+                                            Box::new(git::FileHistory),
+                                        )
                                     })
                                     .when(!is_dir, |menu| {
                                         menu.action(
-                                            "Open File Permalink",
+                                            i18n::tr("Open File Permalink"),
                                             git::OpenFilePermalink.boxed_clone(),
                                         )
                                         .action(
-                                            "Copy File Permalink",
+                                            i18n::tr("Copy File Permalink"),
                                             git::CopyFilePermalink.boxed_clone(),
                                         )
                                     })
                             })
                             .when(!should_hide_rename, |menu| {
-                                menu.separator().action("Rename", Box::new(Rename))
+                                menu.separator()
+                                    .action(i18n::tr("Rename"), Box::new(Rename))
                             })
                             .when(!is_root && !is_collab, |menu| {
-                                menu.action("Trash", Box::new(Trash { skip_prompt: false }))
+                                menu.action(
+                                    i18n::tr("Trash"),
+                                    Box::new(Trash { skip_prompt: false }),
+                                )
                             })
                             .when(!is_root, |menu| {
-                                menu.action("Delete", Box::new(Delete { skip_prompt: false }))
+                                menu.action(
+                                    i18n::tr("Delete"),
+                                    Box::new(Delete { skip_prompt: false }),
+                                )
                             })
                             .when(!is_collab && is_root, |menu| {
                                 menu.separator()
                                     .action(
-                                        "Add Folders to Project…",
+                                        i18n::tr("Add Folders to Project…"),
                                         Box::new(workspace::AddFolderToProject),
                                     )
-                                    .action("Remove from Project", Box::new(RemoveFromProject))
+                                    .action(
+                                        i18n::tr("Remove from Project"),
+                                        Box::new(RemoveFromProject),
+                                    )
                             })
                             .when(is_dir && !is_root, |menu| {
                                 menu.separator()
-                                    .action("Expand All", Box::new(ExpandSelectedEntryAndChildren))
                                     .action(
-                                        "Collapse All",
+                                        i18n::tr("Expand All"),
+                                        Box::new(ExpandSelectedEntryAndChildren),
+                                    )
+                                    .action(
+                                        i18n::tr("Collapse All"),
                                         Box::new(CollapseSelectedEntryAndChildren),
                                     )
                             })
                             .when(is_dir && is_root, |menu| {
                                 menu.separator()
-                                    .action("Expand All", Box::new(ExpandAllEntries))
-                                    .action("Collapse All", Box::new(CollapseAllEntries))
+                                    .action(i18n::tr("Expand All"), Box::new(ExpandAllEntries))
+                                    .action(i18n::tr("Collapse All"), Box::new(CollapseAllEntries))
                             })
                     }
                 })
@@ -2075,7 +2126,9 @@ impl ProjectPanel {
         if !filename.is_empty() {
             if filename.is_empty() {
                 edit_state.validation_state =
-                    ValidationState::Error("File or directory name cannot be empty.".to_string());
+                    ValidationState::Error(
+                        i18n::tr("File or directory name cannot be empty.").to_string(),
+                    );
                 cx.notify();
                 return;
             }
@@ -2083,7 +2136,8 @@ impl ProjectPanel {
             let trimmed_filename = filename.trim();
             if trimmed_filename != filename {
                 edit_state.validation_state = ValidationState::Warning(
-                    "File or directory name contains leading or trailing whitespace.".to_string(),
+                    i18n::tr("File or directory name contains leading or trailing whitespace.")
+                        .to_string(),
                 );
                 cx.notify();
                 return;
@@ -2092,7 +2146,8 @@ impl ProjectPanel {
 
             let Ok(filename) = RelPath::from_unix_str(trimmed_filename) else {
                 edit_state.validation_state = ValidationState::Warning(
-                    "File or directory name contains leading or trailing whitespace.".to_string(),
+                    i18n::tr("File or directory name contains leading or trailing whitespace.")
+                        .to_string(),
                 );
                 cx.notify();
                 return;
@@ -2668,7 +2723,13 @@ impl ProjectPanel {
 
             let answer = if !action.skip_prompt {
                 let prompt = format!("Discard changes to {}?", MarkdownInlineCode(&file_name));
-                Some(window.prompt(PromptLevel::Info, &prompt, None, &["Restore", "Cancel"], cx))
+                Some(window.prompt(
+                    PromptLevel::Info,
+                    &prompt,
+                    None,
+                    &[i18n::tr("Restore"), i18n::tr("Cancel")],
+                    cx,
+                ))
             } else {
                 None
             };
@@ -2841,17 +2902,28 @@ impl ProjectPanel {
     where
         S: AsRef<str>,
     {
-        let (message_start, confirmation_label, detail) = match kind {
-            RemovalKind::Trash => ("Do you want to trash", "Trash", None),
+        let (single_template, multiple_template, confirmation_label, detail) = match kind {
+            RemovalKind::Trash => (
+                "Do you want to trash {}?",
+                "Do you want to trash the following {} files?\n{}",
+                i18n::tr("Trash"),
+                None,
+            ),
             RemovalKind::Delete => (
-                "Are you sure you want to permanently delete",
-                "Delete",
-                Some("This cannot be undone."),
+                "Are you sure you want to permanently delete {}?",
+                "Are you sure you want to permanently delete the following {} files?\n{}",
+                i18n::tr("Delete"),
+                Some(i18n::tr("This cannot be undone.")),
             ),
         };
 
         let mut message = match names {
-            [name] => format!("{message_start} {}?", MarkdownInlineCode(name.as_ref())),
+            [name] => {
+                let code = MarkdownInlineCode(name.as_ref()).to_string();
+                i18n::lookup(single_template)
+                    .unwrap_or(single_template)
+                    .replace("{}", &code)
+            }
             _ => {
                 const CUTOFF_POINT: usize = 10;
                 let mut listed_names = names
@@ -2861,30 +2933,38 @@ impl ProjectPanel {
                     .collect::<Vec<_>>();
                 let omitted_count = names.len().saturating_sub(CUTOFF_POINT);
                 if omitted_count == 1 {
-                    listed_names.push(".. 1 file not shown".into());
+                    listed_names.push(i18n::tr(".. 1 file not shown").into());
                 } else if omitted_count > 1 {
-                    listed_names.push(format!(".. {omitted_count} files not shown"));
+                    listed_names.push(
+                        i18n::tr(".. {} files not shown")
+                            .replace("{}", &omitted_count.to_string()),
+                    );
                 }
 
-                format!(
-                    "{message_start} the following {} files?\n{}",
-                    names.len(),
-                    listed_names.join("\n")
-                )
+                let joined_names = listed_names.join("\n");
+                i18n::lookup(multiple_template)
+                    .unwrap_or(multiple_template)
+                    .replacen("{}", &names.len().to_string(), 1)
+                    .replacen("{}", &joined_names, 1)
             }
         };
         match dirty_buffers {
             0 => {}
             1 if names.len() == 1 => {
-                message.push_str("\n\nIt has unsaved changes, which will be lost.");
+                message.push_str(i18n::tr(
+                    "\n\nIt has unsaved changes, which will be lost.",
+                ));
             }
             1 => {
-                message.push_str("\n\n1 of these has unsaved changes, which will be lost.");
+                message.push_str(i18n::tr(
+                    "\n\n1 of these has unsaved changes, which will be lost.",
+                ));
             }
             dirty_buffers => {
-                message.push_str(&format!(
-                    "\n\n{dirty_buffers} of these have unsaved changes, which will be lost."
-                ));
+                message.push_str(
+                    &i18n::tr("\n\n{} of these have unsaved changes, which will be lost.")
+                        .replace("{}", &dirty_buffers.to_string()),
+                );
             }
         }
 
@@ -2950,7 +3030,7 @@ impl ProjectPanel {
                     PromptLevel::Info,
                     &prompt.message,
                     prompt.detail,
-                    &[prompt.confirmation_label, "Cancel"],
+                    &[prompt.confirmation_label, i18n::tr("Cancel")],
                     cx,
                 ))
             } else {
@@ -5076,21 +5156,21 @@ impl ProjectPanel {
         cx.spawn_in(window, async move |this, cx| {
             async move {
                 for (filename, original_path) in &paths_to_replace {
-                    let prompt_message = format!(
-                        concat!(
-                            "A file or folder with name {} ",
-                            "already exists in the destination folder. ",
-                            "Do you want to replace it?"
-                        ),
-                        MarkdownInlineCode(filename)
+                    let template = i18n::lookup(
+                        "A file or folder with name {} already exists in the destination folder. Do you want to replace it?",
+                    )
+                    .unwrap_or(
+                        "A file or folder with name {} already exists in the destination folder. Do you want to replace it?",
                     );
+                    let prompt_message =
+                        template.replace("{}", &MarkdownInlineCode(filename).to_string());
                     let answer = cx
                         .update(|window, cx| {
                             window.prompt(
                                 PromptLevel::Info,
                                 &prompt_message,
                                 None,
-                                &["Replace", "Cancel"],
+                                &[i18n::tr("Replace"), i18n::tr("Cancel")],
                                 cx,
                             )
                         })?
@@ -6645,7 +6725,7 @@ impl ProjectPanel {
                                         Tooltip::with_meta(
                                             path.to_string_lossy().into_owned(),
                                             None,
-                                            "Symbolic Link",
+                                            i18n::tr("Symbolic Link"),
                                             cx,
                                         )
                                     })
@@ -8155,7 +8235,7 @@ impl Render for ProjectPanel {
                 .size_full()
                 .child(
                     ProjectEmptyState::new(
-                        "Project Panel",
+                        i18n::tr("Project Panel"),
                         focus_handle.clone(),
                         KeyBinding::for_action_in(&workspace::Open::default(), &focus_handle, cx),
                     )
@@ -8226,7 +8306,10 @@ impl Render for DraggedProjectEntryView {
                     .bg(cx.theme().colors().background)
                     .map(|this| {
                         if self.selections.len() > 1 && self.selections.contains(&self.selection) {
-                            this.child(Label::new(format!("{} entries", self.selections.len())))
+                            this.child(Label::new(
+                                i18n::tr("{} entries")
+                                    .replace("{}", &self.selections.len().to_string()),
+                            ))
                         } else {
                             this.child(
                                 h_flex()
@@ -8282,7 +8365,7 @@ impl Panel for ProjectPanel {
     }
 
     fn icon_tooltip(&self, _window: &Window, _cx: &App) -> Option<&'static str> {
-        Some("Project Panel")
+        Some(i18n::tr("Project Panel"))
     }
 
     fn toggle_action(&self) -> Box<dyn Action> {

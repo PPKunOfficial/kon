@@ -365,23 +365,23 @@ impl Render for LanguageServerPrompt {
                                             "copy-description",
                                             request.message.clone(),
                                         )
-                                        .tooltip_label("Copy Description"),
+                                        .tooltip_label(i18n::tr("Copy Description")),
                                     )
                                     .child(
                                         IconButton::new(close_id, close_icon)
                                             .tooltip(move |_window, cx| {
                                                 if suppress {
                                                     Tooltip::with_meta(
-                                                        "Suppress",
+                                                        i18n::tr("Suppress"),
                                                         Some(&SuppressNotification),
-                                                        "Click to close",
+                                                        i18n::tr("Click to close"),
                                                         cx,
                                                     )
                                                 } else {
                                                     Tooltip::with_meta(
-                                                        "Close",
+                                                        i18n::tr("Close"),
                                                         Some(&menu::Cancel),
-                                                        "Suppress with shift-click",
+                                                        i18n::tr("Suppress with shift-click"),
                                                         cx,
                                                     )
                                                 }
@@ -847,7 +847,7 @@ pub mod simple_message_notification {
                     )
                     .icon_size(IconSize::XSmall)
                     .icon_color(Color::Muted),
-                    Tooltip::text("More Options"),
+                    Tooltip::text(i18n::tr("More Options")),
                 )
                 .menu(move |window, cx| {
                     let entries = entries.clone();
@@ -1058,7 +1058,7 @@ pub mod simple_message_notification {
                 .when_some(copy_text, |el, text| {
                     el.child(
                         CopyButton::new("copy-notification-message", text)
-                            .tooltip_label("Copy Message"),
+                            .tooltip_label(i18n::tr("Copy Message")),
                     )
                 })
                 .when(show_close_button, |el| {
@@ -1067,20 +1067,20 @@ pub mod simple_message_notification {
                             .tooltip(move |_window, cx| {
                                 if suppress {
                                     Tooltip::with_meta(
-                                        "Suppress",
+                                        i18n::tr("Suppress"),
                                         Some(&SuppressNotification),
-                                        "Click to Close",
+                                        i18n::tr("Click to Close"),
                                         cx,
                                     )
                                 } else if show_suppress_button {
                                     Tooltip::with_meta(
-                                        "Close",
+                                        i18n::tr("Close"),
                                         Some(&menu::Cancel),
-                                        "Shift-click to Suppress",
+                                        i18n::tr("Shift-click to Suppress"),
                                         cx,
                                     )
                                 } else {
-                                    Tooltip::for_action("Close", &menu::Cancel, cx)
+                                    Tooltip::for_action(i18n::tr("Close"), &menu::Cancel, cx)
                                 }
                             })
                             .on_click(cx.listener(move |_, _, _, cx| {

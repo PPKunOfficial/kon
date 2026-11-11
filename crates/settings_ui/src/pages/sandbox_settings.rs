@@ -80,7 +80,7 @@ pub(crate) fn render_sandbox_settings_page(
             // Wrap in a row so the button shrinks to its content width instead
             // of stretching across the settings page.
             h_flex().child(
-                Button::new("sandbox-docs-link", "Learn more about sandboxing")
+                Button::new("sandbox-docs-link", i18n::tr("Learn more about sandboxing"))
                     .label_size(LabelSize::Small)
                     .color(Color::Muted)
                     .end_icon(
@@ -99,7 +99,7 @@ pub(crate) fn render_sandbox_settings_page(
                     .severity(Severity::Warning)
                     .child(Label::new(error).size(LabelSize::Small))
                     .action_slot(
-                        Button::new("dismiss-sandbox-host-error", "Dismiss")
+                        Button::new("dismiss-sandbox-host-error", i18n::tr("Dismiss"))
                             .style(ButtonStyle::Tinted(ui::TintColor::Warning))
                             .on_click(cx.listener(|this, _, _, cx| {
                                 this.sandbox_host_validation_error = None;
@@ -244,7 +244,7 @@ fn render_empty_state(border_color: gpui::Hsla) -> AnyElement {
         .border_dashed()
         .border_color(border_color)
         .child(
-            Label::new("Nothing configured")
+            Label::new(i18n::tr("Nothing configured"))
                 .size(LabelSize::Small)
                 .color(Color::Disabled),
         )
